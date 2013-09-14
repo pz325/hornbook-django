@@ -13,7 +13,6 @@ edit <strong>djangoappengine/boot.py setup_env()</strong>, add the following bef
     sys.path.insert(1, os.path.join(PROJECT_DIR, 'libs'))
 </code></pre>
 
-
 Also edit <strong>manage.py</strong>, add the following before everything else.
 <pre><code>
     import sys
