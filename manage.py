@@ -1,9 +1,8 @@
 #!/usr/bin/env python
 
-# import sys
-# import os.path
-# sys.path.insert(1, os.path.join(os.path.abspath('.'), 'libs'))
-
+import sys
+import os.path
+sys.path.insert(1, os.path.join(os.path.abspath('.'), 'libs'))
 
 from django.core.management import execute_manager
 try:
