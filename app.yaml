@@ -16,15 +16,15 @@ libraries:
 
 handlers:
 - url: /_ah/queue/deferred
-  script: djangoappengine.deferred.handler.application
+  script: libs.djangoappengine.deferred.handler.application
   login: admin
 
 - url: /_ah/stats/.*
-  script: djangoappengine.appstats.application
+  script: libs.djangoappengine.appstats.application
 
 - url: /media/admin
-  static_dir: django/contrib/admin/media
+  static_dir: libs.django/contrib/admin/media
   expiration: '0'
 
 - url: /.*
-  script: djangoappengine.main.application
+  script: libs.djangoappengine.main.application
