@@ -1,6 +1,6 @@
 $(document).ready(function(){
-    var API_MOST_COMMON_CHARACTER_URL = "api/most_common_character";
-    var API_MOST_COMMON_WORD_URL = "api/most_common_word";
+    var API_MOST_COMMON_CHARACTER_URL = "/api/most_common_character";
+    var API_MOST_COMMON_WORD_URL = "/api/most_common_word";
 
     var g_ref_character;
     var g_last_word;
