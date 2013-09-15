@@ -9,8 +9,9 @@ Setup
 
 edit <strong>djangoappengine/boot.py setup_env()</strong>, add the following before everything else.
 <pre><code>
-    # add 'PROJECT_DIR/libs' to sys.path
+    # add 'PROJECT_DIR/libs' and 'PROJECT_DIR/utils' to sys.path
     sys.path.insert(1, os.path.join(PROJECT_DIR, 'libs'))
+    sys.path.insert(1, os.path.join(PROJECT_DIR, 'utils'))
 </code></pre>
 
 Also edit <strong>manage.py</strong>, add the following before everything else.
