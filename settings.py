@@ -24,6 +24,9 @@ INSTALLED_APPS = (
     'autoload',
     'dbindexer',
 
+    # project apps
+    'apps.hornbook_api',
+
     # djangoappengine should come last, so it can override a few manage.py commands
     'djangoappengine',
 )
@@ -55,3 +58,9 @@ ROOT_URLCONF = 'urls'
 
 # time zone
 TIMEZONE = 'Europe/London'
+
+#template loaders
+TEMPLATE_LOADERS = (
+    'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.filesystem.Loader',
+)

@@ -4,6 +4,7 @@
 # Create your views here.
 from models import MostCommonCharacter
 from models import MostCommonWord
+from django.shortcuts import render_to_response
 from django.http import HttpResponse
 import json
 import random
@@ -12,7 +13,7 @@ def index(request):
     '''
     Test page for horn_api app
     '''
-    return HttpResponse('hello')
+    return render_to_response('hornbook_api/index.html')
 
 def get_most_common_character(request):
     '''
