@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     ('^$', 'django.views.generic.simple.direct_to_template',
      {'template': 'home.html'}),
 
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login', {'template_name': 'accounts/login.html'}),
     url(r'^api/', include('apps.hornbook_api.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

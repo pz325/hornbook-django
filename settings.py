@@ -26,6 +26,7 @@ INSTALLED_APPS = (
 
     # project apps
     'apps.hornbook_api',
+    'apps.accounts',
 
     # djangoappengine should come last, so it can override a few manage.py commands
     'djangoappengine',
