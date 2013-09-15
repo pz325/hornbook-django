@@ -11,7 +11,6 @@ urlpatterns = patterns('',
     ('^$', 'django.views.generic.simple.direct_to_template',
      {'template': 'home.html'}),
 
-    url(r'^favicon\.ico$', 'django.views.generic.simple.redirect_to', {'url': '/static/images/favicon.ico'}),
     url(r'^api/', include('apps.hornbook_api.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
