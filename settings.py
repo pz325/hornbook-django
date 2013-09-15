@@ -19,7 +19,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     # 'django.contrib.sites',        # A framework for managing multiple sites with one Django installation.
     # 'django.contrib.messages',     # A messaging framework.
-    # 'django.contrib.staticfiles',  # A framework for managing static files.
+    'django.contrib.staticfiles',  # A framework for managing static files.
     'djangotoolbox',
     'autoload',
     'dbindexer',
@@ -51,6 +51,13 @@ ADMIN_MEDIA_PREFIX = '/media/admin/'
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
 ROOT_URLCONF = 'urls'
+01256+6+3
 
 # time zone
 TIMEZONE = 'Europe/London'
+
+# static file settings
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(os.path.dirname(__file__), "static"),
+    )

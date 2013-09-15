@@ -8,6 +8,12 @@ from django.http import HttpResponse
 import json
 import random
 
+def index(request):
+    '''
+    Test page for horn_api app
+    '''
+    return HttpResponse('hello')
+
 def get_most_common_character(request):
     '''
     HTTP GET /api/most_common_character

@@ -1,0 +1,12 @@
+/* han_character styles */
+.han_character
+{
+    display: inline;
+    font-size: 20em;
+    font-family: "DFKai-SB", "BiauKai", "STKaiti";
+}
+
+body
+{
+    background-color: #C7EDCC
+}
