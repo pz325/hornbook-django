@@ -11,8 +11,6 @@ urlpatterns = patterns('',
     ('^$', 'django.views.generic.simple.direct_to_template',
      {'template': 'home.html'}),
 
-    url(r'^api/most_common_character/$', 'apps.hornbook_api.views.get_most_common_character'),
-    url(r'^api/all_most_common_characters/$', 'apps.hornbook_api.views.get_all_most_common_characters'),
-    url(r'^api/most_common_word/$', 'apps.hornbook_api.views.get_most_common_word'),   
+    url(r'^api/', include('apps.hornbook_api.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )
