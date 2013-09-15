@@ -12,5 +12,7 @@ urlpatterns = patterns('',
      {'template': 'home.html'}),
 
     url(r'^api/most_common_character/$', 'apps.hornbook_api.views.get_most_common_character'),
+    url(r'^api/all_most_common_characters/$', 'apps.hornbook_api.views.get_all_most_common_characters'),
+    
     url(r'^admin/', include(admin.site.urls)),
 )

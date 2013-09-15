@@ -2,11 +2,11 @@
 # -*- coding: utf-8 -*-
 
 # Create your views here.
+from models import MostCommonCharacter
+
 from django.http import HttpResponse
-from django.core.cache import cache
-import os.path
-import random
 import json
+
 
 def get_most_common_character(request):
     '''
@@ -14,14 +14,17 @@ def get_most_common_character(request):
     
     Resp: {"u_char": "\u60c5"}
     '''
-    most_common_characters = cache.get('most_common_characters')
-    if most_common_characters is None:
-        f = open(os.path.dirname(__file__) + '/../../data/most_common_chinese_characters.txt')
-        most_common_characters = f.readlines()
-        cache.set('most_common_characters', most_common_characters)
-    index = random.randint(0, len(most_common_characters)-1)
-    u_char = unicode(most_common_characters[index], "utf-8").strip()
+    u_char = MostCommonCharacter.get_one()
     return_json = json.dumps(dict(u_char=u_char))
-    # self.response.headers['Content-Type'] = 'text/plain'
-    # self.response.write(return_json)
+    return HttpResponse(return_json)
+
+def get_all_most_common_characters(request):
+    '''
+    HTTP GET /api/all_most_common_characters
+
+    Resp: [{"frequency": 883634, "u_char": "\u4e86"}, {"frequency": 796991, "u_char": "\u662f"}, ...], sorted by frequency
+    '''
+    most_common_characters = MostCommonCharacter.get_all()
+    most_common_characters = [dict(u_char=ch, frequency=f) for (ch, f) in most_common_characters]
+    return_json = json.dumps(most_common_characters)
     return HttpResponse(return_json)
