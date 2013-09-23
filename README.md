@@ -20,3 +20,10 @@ Also edit <strong>manage.py</strong>, add the following before everything else.
     import os.path
     sys.path.insert(1, os.path.join(os.path.abspath('.'), 'libs'))
 </code></pre>
+
+Development Server
+----
+<pre><code>
+	pytho manage.py runserver
+</code></pre>
+Then visit: localhost:8000
