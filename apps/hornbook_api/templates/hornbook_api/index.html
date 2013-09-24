@@ -11,13 +11,34 @@
     </head>
 
     <body ng-controller="HornbookAPICtrl">
-        <div class="content" ng-repeat="api in apis">
-            <h1>{{api.name}}</h1>
+        <div class="content" ng-model="apis">
+            <h1>{{apis[0].name}}</h1>
+            <button ng-click="requestAPI(apis[0])">GET</button>
             <div class="prettyprint">
-                <input ng-model=api.params>
-                <button ng-click="requestAPI(api)">GET</button>
+                <p>Static: {{apis[0].response.status}}</p>
+                <p>Headers: {{apis[0].response.headers}}</p>
+                <p>Data: {{apis[0].response.data}}</p>
             </div>
-            <div class="prettyprint">{{api.response}}</div>
         </div>
+        <div class="content" ng-model="apis">
+            <h1>{{apis[1].name}}</h1>
+            <button ng-click="requestAPI(apis[1])">GET</button>
+            <div class="prettyprint">
+                <p>Static: {{apis[1].response.status}}</p>
+                <p>Headers: {{apis[1].response.headers}}</p>
+                <p>Data: {{apis[1].response.data}}</p>
+            </div>
+        </div>
+        <div class="content" ng-model="apis">
+            <h1>{{apis[2].name}}</h1>
+            Ref character: <input ng-model="apis[2].params.ref_character"/>
+            Last word: <input ng-model="apis[2].params.last_word"/>
+            <button ng-click="requestAPI(apis[2])">GET</button>
+            <div class="prettyprint">
+                <p>Static: {{apis[2].response.status}}</p>
+                <p>Headers: {{apis[2].response.headers}}</p>
+                <p>Data: {{apis[2].response.data}}</p>
+            </div>
+        </div>      
     </body>
 </html>

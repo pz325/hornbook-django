@@ -34,15 +34,19 @@ function HornbookAPICtrl($scope, $http) {
 	 	},
 	];
 
+	var prettyJSON = function(obj) {
+		return JSON.stringify(obj, null, 4);
+	};
+
 	var hornbookAPIService = function(api) {
 		$http({
 			method: "GET",
 			url: api.url,
 			params: api.params
 		}).success(function(data, status, headers){
-			api.response.data = JSON.stringify(data);
-			api.response.status = JSON.stringify(status);
-			api.response.headers = JSON.stringify(headers);
+			api.response.data = prettyJSON(data);
+			api.response.status = prettyJSON(status);
+			api.response.headers = prettyJSON(headers());
 		});
 	};
 	
@@ -52,7 +56,6 @@ function HornbookAPICtrl($scope, $http) {
 
 	// request API
 	$scope.apis.forEach(function(element, index, array) {
-		console.log(element);
 		hornbookAPIService(element);
 	});
 }
