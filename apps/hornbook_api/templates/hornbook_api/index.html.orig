@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app>
+    <head>
+        <meta charset="UTF-8">
+        <link href="/css/main.css" rel="stylesheet" type="text/css" media="all"/>
+        <link href="/css/hornbook_api/main.css" rel="stylesheet" type="text/css" media="all"/>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+        <script type="text/javascript" src="/js/hornbook_api/controllers.js"></script>
+        <title>hornbook_api</title>
+    </head>
+
+    <body ng-controller="HornbookAPICtrl">
+        <div class="content" ng-model="apis">
+            <h1>{{apis[0].name}}</h1>
+            <button ng-click="requestAPI(apis[0])">GET</button>
+            <div class="prettyprint">
+                <p>Static: {{apis[0].response.status}}</p>
+                <p>Headers: {{apis[0].response.headers}}</p>
+                <p>Data: {{apis[0].response.data}}</p>
+            </div>
+        </div>
+        <div class="content" ng-model="apis">
+            <h1>{{apis[1].name}}</h1>
+            <button ng-click="requestAPI(apis[1])">GET</button>
+            <div class="prettyprint">
+                <p>Static: {{apis[1].response.status}}</p>
+                <p>Headers: {{apis[1].response.headers}}</p>
+                <p>Data: {{apis[1].response.data}}</p>
+            </div>
+        </div>
+        <div class="content" ng-model="apis">
+            <h1>{{apis[2].name}}</h1>
+            Ref character: <input ng-model="apis[2].params.ref_character"/>
+            Last word: <input ng-model="apis[2].params.last_word"/>
+            <button ng-click="requestAPI(apis[2])">GET</button>
+            <div class="prettyprint">
+                <p>Static: {{apis[2].response.status}}</p>
+                <p>Headers: {{apis[2].response.headers}}</p>
+                <p>Data: {{apis[2].response.data}}</p>
+            </div>
+        </div>      
+    </body>
+</html>
