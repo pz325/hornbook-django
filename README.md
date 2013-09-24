@@ -27,3 +27,18 @@ Development Server
 	pytho manage.py runserver
 </code></pre>
 Then visit: localhost:8000
+
+
+Url mapping
+----
+Use GAE app.yaml setting to contrl basic static files Url mapping
+  /favicon.ico
+  /js
+  /css
+  /index.html
+Use Angular.js to control static page Url mapping (js/url.js). Those static pages fit in /index.html template as ng-view
+  /hornbook_api
+Use Django urls.py to contrl web service Url mapping
+  /accounts/login
+  /admin/
+  /hornbook_api/
