@@ -14,10 +14,8 @@
         <div class="content" ng-repeat="api in apis">
             <h1>{{api.name}}</h1>
             <div class="prettyprint">
-                <input ng-model=api.request>
-            </div>
-            <div>
-                {{api.request}}
+                <input ng-model=api.params>
+                <button ng-click="requestAPI(api)">GET</button>
             </div>
             <div class="prettyprint">{{api.response}}</div>
         </div>
