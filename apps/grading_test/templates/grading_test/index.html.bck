@@ -1,12 +1,17 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link href="/css/main.css" rel="stylesheet" type="text/css" media="all"/>
+        <script type="text/javascript" src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+        <script type="text/javascript" src="/js/hornbook_api.js"></script>
+        <script type="text/javascript" src="/js/flashcard.js"></script>
+        <title>grading_test</title>
+    </head>
 
-{% block preload_js %}
-    <script type="text/javascript" src="/js/hornbook_api.js"></script>
-    <script type="text/javascript" src="/js/flashcard.js"></script>
-{% endblock %}
-
-{% block content %}
-    <div id= "flashcard", class="flashcard">
+    <body>
+        <h1>Hornbook</h1>
+        <div id= "flashcard", class="flashcard">
         </div>
         <button id="button_yes" class="button_yes">Yes</button>
         <button id="button_no" class="button_no">No</button>
@@ -24,4 +29,5 @@
                 });
             });
         </script>
-{% endblock %}
+    </body>
+</html>
