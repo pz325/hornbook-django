@@ -29,6 +29,7 @@ INSTALLED_APPS = (
     'apps.accounts',
     'apps.user_vocabularies',
     'apps.grading_test',
+    'apps.hornbook_landing',
 
     # djangoappengine should come last, so it can override a few manage.py commands
     'djangoappengine',
