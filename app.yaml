@@ -40,9 +40,5 @@ handlers:
   static_files: apps/hornbook_api/templates/hornbook_api/index.html
   upload: apps/hornbook_api/templates/hornbook_api/index.html
 
-- url: /index.html
-  static_files: static/index.html
-  upload: static/index.html
-
 - url: /.*
   script: libs.djangoappengine.main.application

@@ -12,12 +12,15 @@
     {% block preload_js %}
     {% endblock %}
 
-    {% block extra-head %}{% endblock %}
+    {% block extra-head %}
+    {% endblock %}
   </head>
 
   <body>
     <div id="header">
       <a id="logo" href="/">Menrfa's Hornbook</a>
+      {% block page-header %}
+      {% endblock %}
     </div>
 
     <div class="columns">
@@ -32,7 +35,8 @@
           {% endif %}
         {% endblock %}
 
-        {% block content %}{% endblock %}
+        {% block content %}
+        {% endblock %}
       </div>
 
       <div id="sidebar" class="column">
