@@ -6,7 +6,64 @@
     font-family: "DFKai-SB", "BiauKai", "STKaiti";
 }
 
-body
-{
-    background-color: #C7EDCC
+html, body { height : 100%; }
+.header a {
+    text-decoration:none;
+    color: #FFFFFF; 
 }
+.header a:hover {
+    text-decoration:none;
+    color: #FFFFFF;
+}
+.header a:visited {
+    text-decoration:none;   
+    color: #FFFFFF;
+}
+.container {
+    width: 90%;
+    max-height: 100%;
+    margin: 10px;
+    border: 1px solid #fff;
+    background-color: #C7EDCC;
+    box-shadow: 0px 2px 7px #292929;
+    -moz-box-shadow: 0px 2px 7px #292929;
+    -webkit-box-shadow: 0px 2px 7px #292929;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+}
+.mainbody,
+.header,
+.footer {
+    padding: 5px;
+}
+.mainbody {
+    margin-top: 0;
+    min-height: 150px;
+    max-height: 100%;
+    overflow: auto;
+}
+.header {
+    height: 40px;
+    border-bottom: 1px solid #EEE;
+    background-color: #0099CC;
+    -webkit-border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    -moz-border-radius-topleft: 5px;
+    -moz-border-radius-topright: 5px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    color: #FFFFFF;
+}
+.footer {
+    height: 40px;
+    background-color: whiteSmoke;
+    border-top: 1px solid #DDD;
+    -webkit-border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-bottomleft: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+

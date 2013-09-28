@@ -17,15 +17,22 @@
   </head>
 
   <body>
-    <div id="header">
-      <a id="logo" href="/">Menrfa's Hornbook</a>
-      {% block page-header %}
-      {% endblock %}
-    </div>
 
-    <div class="columns">
-      <div id="content" class="column">
-        {% block content-header %}
+    <div class="container">
+      <div class="header">
+        <a href="/">Home</a>
+        {% if user.is_authenticated %}
+          <span>{{user.username}}</span>
+          <a href="/accounts/logout/">Log out</a>
+        {% else %}
+          <a href="/accounts/login/">Log in</a>
+        {% endif %}
+        {% block page-header %}
+        {% endblock %}
+      </div>
+      
+      <div class="mainbody">
+        <div class="message">
           {% if error %}<div class="error">{{ error }}</div>{% endif %}
           {% if info %}<div class="info">{{ info }}</div>{% endif %}
           {% if messages %}
@@ -33,10 +40,23 @@
               <div class="info">{{ message }}</div>
             {% endfor %}
           {% endif %}
-        {% endblock %}
-
+        </div>
         {% block content %}
         {% endblock %}
+      </div>
+
+      <div class="footer">
+        <p>Copyright © 2013 All Rights Reserved </p>
+      </div>
+    </div>
+
+    <div class="columns">
+      <div id="content" class="column">
+        {% block content-header %}
+          
+        {% endblock %}
+
+        
       </div>
 
       <div id="sidebar" class="column">
@@ -46,7 +66,7 @@
     </div>
 
     <div id="footer">
-      <p>Copyright © 2013 All Rights Reserved </p>
+      
     </div>
 
     {% block js %}
