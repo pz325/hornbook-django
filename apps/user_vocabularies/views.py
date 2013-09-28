@@ -1,6 +1,7 @@
 # Create your views here.
 from django.contrib.auth.decorators import login_required
 from models import UserVocabulary
+from django.http import HttpResponse
 
 @login_required
 def add_to_user_vocabulary(request):
@@ -12,4 +13,5 @@ def add_to_user_vocabulary(request):
     vocabulary = request.POST['vocabulary']
     user_vocabulary = UserVocabulary(user=request.user, vocabulary=vocabulary)
     user_vocabulary.save()
-    pass
+
+    return HttpResponse("saved")

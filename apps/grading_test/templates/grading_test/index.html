@@ -3,6 +3,7 @@
 {% block preload_js %}
     <script type="text/javascript" src="/js/hornbook_api.js"></script>
     <script type="text/javascript" src="/js/flashcard.js"></script>
+    <script type="text/javascript" src="/js/grading_test.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -10,18 +11,4 @@
         </div>
         <button id="button_yes" class="button_yes">Yes</button>
         <button id="button_no" class="button_no">No</button>
-        <script type="text/javascript">
-            $(document).ready(function(){
-                Flashcard.init($("#flashcard"), GradingTest);
-
-                // binding button click event
-                $("#button_yes").click(function(){
-                    Flashcard.get_next_common_character();
-                });
-
-                $("#button_no").click(function(){
-                    Flashcard.get_next_common_character();
-                });
-            });
-        </script>
 {% endblock %}
