@@ -18,7 +18,7 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.sessions',
     # 'django.contrib.sites',        # A framework for managing multiple sites with one Django installation.
-    # 'django.contrib.messages',     # A messaging framework.
+    'django.contrib.messages',     # A messaging framework.
     # 'django.contrib.staticfiles',  # A framework for managing static files.
     'djangotoolbox',
     'autoload',
@@ -38,13 +38,14 @@ INSTALLED_APPS = (
 MIDDLEWARE_CLASSES = (
     # This loads the index definitions, so it has to come first
     'autoload.middleware.AutoloadMiddleware',
-
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.messages.context_processors.messages',
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.request',
     'django.core.context_processors.media',

@@ -3,6 +3,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import sys
+from django.contrib import admin
 
 # Create your models here.
 class UserVocabulary(models.Model):
@@ -12,3 +13,5 @@ class UserVocabulary(models.Model):
 
     # def __unicode__(self):
         # return '{0}: {1}'.format(self.user.username, self.vocabulary.encode(sys.stdout.encoding))
+
+admin.site.register(UserVocabulary)
