@@ -36,6 +36,9 @@ handlers:
 - url: /js
   static_dir: static/js
 
+- url: /admin/admin
+  static_dir: libs/django/contrib/admin/static/admin
+
 - url: /api/index.html
   static_files: apps/hornbook_api/templates/hornbook_api/index.html
   upload: apps/hornbook_api/templates/hornbook_api/index.html
