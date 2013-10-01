@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block preload_js %}
+    <script type="text/javascript" src="/js/flashcard.js"></script>
+    <script type="text/javascript" src="/js/study.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="today_study">
+        <input type="text" name="today_study">
+    </div>
+    <div class="all_study">
+    </div>
+    <div id= "flashcard", class="flashcard">
+    </div>
+{% endblock %}

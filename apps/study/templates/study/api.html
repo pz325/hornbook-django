@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block preload_js %}
+    <script type="text/javascript" src="/js/study.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Save Study</h1>
+        <input type="text" id="vocabularies"/>
+        <button>POST</button>
+        <div class="prettyprint">
+            <p>Static: </p>
+            <p>Headers: </p>
+            <p>Data: </p>
+        </div>
+    </div>
+
+    <div>
+        <h1>Get Study Between</h1>
+        <input type="text" id="start_date"/>
+        <input type="text" id="end_date">
+        <button>GET</button>
+        <div class="prettyprint">
+            <p>Static: </p>
+            <p>Headers: </p>
+            <p>Data: </p>
+        </div>
+    </div>
+{% endblock %}
