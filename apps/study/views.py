@@ -4,9 +4,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse
+from django.core.serializers.json import DjangoJSONEncoder
 from models import StudyHistory
 from datetime import date
-from datetime import datetime
+import datetime
 import json
 
 @login_required
@@ -23,22 +24,21 @@ def api_index(request):
 def save_study(request):
     '''
     HTTP POST /study/save_study
-    Data vocabularies: [{u_char: u0x2345}, {u_char: u0x1111}]
+    Data vocabularies: "u0x2345 u0x1111"
     '''
-    vocabularies = request.POST['vocabularies']
-
+    vocabularies = request.POST['vocabularies'].split(' ')
     today = date.today()
-    StudyHistory.objects.filter(user=request.user, study_date__contains=today).delete()
-
+    tomorrow = today + datetime.timedelta(days=1)
+    StudyHistory.objects.filter(user=request.user, 
+        study_date__range=(today, tomorrow)).delete()
     for v in vocabularies:
-        h = StudyHistory(user=request.user, vocabulary=v['u_char'], study_date=today)
+        h = StudyHistory(user=request.user, vocabulary=v, study_date=today)
         h.save()
 
     ret = dict(user=request.user.username,
         vocabularies=vocabularies,
         study_date=today)
-    return HttpResponse(json.dumps(ret))
-
+    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 @login_required
 def get_study_between(request):
