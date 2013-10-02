@@ -3,7 +3,17 @@ var API_GET_STUDY_BWTEEN_URL = "/study/get_study_between";
 
 var StudyAPI = (function() {
     var get_study_between = function(start_date, end_date) {
-
+        console.log('start_date: ', start_date);
+        console.log('end_date: ', end_date);
+        var promise = $.ajax({
+            type: "GET",
+            url: API_GET_STUDY_BWTEEN_URL,
+            data: {
+                start_date: start_date,
+                end_date: end_date
+            }
+        });
+        return promise;
     };
 
     var save_study = function(vocabularies) {
