@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    Flashcard.init($("#flashcard"), GradingTest);
+    Flashcard.init($("#flashcard"), GradingTestStrategy);
 
     var next_char = function() {
         var u_char = GradingTest.get_next_char();

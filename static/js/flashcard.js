@@ -2,7 +2,7 @@
 var Flashcard = (function(){
     var $flashcard_div;
     var strategy_;
-    var ref_character_;
+    var ref_character_ = null;
     var last_word_ = [];  // last_word_ is an array of u_chars
 
     var log_state = function() {
@@ -21,9 +21,11 @@ var Flashcard = (function(){
         .done(function() {
             ref_character_ = strategy_.get_next_char();
             last_word_ = [];
-            last_word_.push(ref_character_);
-            log_state();
-            display_char(ref_character_);
+            if (ref_character_) {
+                last_word_.push(ref_character_);
+                log_state();
+                display_char(ref_character_);    
+            }
         });
     };
 

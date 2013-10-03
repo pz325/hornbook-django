@@ -60,7 +60,7 @@ var HornbookAPI = (function() {
 })();
 
 
-var GradingTest = (function() {
+var GradingTestStrategy = (function() {
     var all_most_common_characters_;
     var index_;
 

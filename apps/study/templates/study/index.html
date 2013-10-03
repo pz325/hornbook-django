@@ -2,12 +2,21 @@
 
 {% block preload_js %}
     <script type="text/javascript" src="/js/flashcard.js"></script>
+    <script type="text/javascript" src="/js/study_api.js"></script>
     <script type="text/javascript" src="/js/study.js"></script>
 {% endblock %}
 
 {% block content %}
     <div class="today_study">
-        <input type="text" name="today_study">
+        Today Study: <input type="text" id="input_today_study">
+        <button id="button_save_study">Submit</button>
+    </div>
+    <div class="previous_study">
+        Previous Study: <select id="select_previous_study">
+            <option value="last_week">Last Week</option>
+            <option value="last_month">Last Month</option>
+            <option value="all">All</option>
+        </select>
     </div>
     <div class="all_study">
     </div>
