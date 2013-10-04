@@ -2,38 +2,39 @@ var API_MOST_COMMON_CHARACTER_URL = "/api/most_common_character";
 var API_ALL_MOST_COMMON_CHARACTERS_URL = "/api/all_most_common_characters";
 var API_MOST_COMMON_WORD_URL = "/api/most_common_word";
 
-/**
- *
- */
 var HornbookAPI = (function() {
-    var all_most_common_characters;
+    var allMostCommonCharacters = []; 
+            // [
+            //    [{u_char: u0x1234}, {u_char: u0x1345}],
+            //    [{u_char: u0x1234}]
+            //]
 
     /**
      * Call HTTP GET /api/all_most_common_characters
      * an local cache kept
      */
-    var get_all_most_common_characters = function() {
-        var deferred_obj = $.Deferred();  
-        if (!all_most_common_characters) {
+    var getAllMostCommonCharacters = function() {
+        var deferredObj = $.Deferred();  
+        if (!allMostCommonCharacters) {
             $.ajax({
                 type: "GET",
                 url: API_ALL_MOST_COMMON_CHARACTERS_URL
             })
             .done(function(resp) {
-                all_most_common_characters = $.parseJSON(resp);
-                deferred_obj.resolve(all_most_common_characters);
+                allMostCommonCharacters = $.parseJSON(resp);
+                deferredObj.resolve(allMostCommonCharacters);
             });
         }
         else {
-            deferred_obj.resolve(all_most_common_characters);
+            deferredObj.resolve(allMostCommonCharacters);
         }
-        return deferred_obj.promise();
+        return deferredObj.promise();
     };
 
     /**
      * HTTP GET /api/most_common_word
      */
-    var get_most_common_word = function(character, word) {
+    var getMostCommonWord = function(character, word) {
         return $.ajax({
             type: "GET",
             url: API_MOST_COMMON_WORD_URL,
@@ -44,7 +45,7 @@ var HornbookAPI = (function() {
     /**
      * HTTP GET /api/most_common_character
      */
-    var get_most_common_character = function() {
+    var getMostCommonCharacter = function() {
         return $.ajax({
             type: "GET",
             url: API_MOST_COMMON_CHARACTER_URL
@@ -53,22 +54,26 @@ var HornbookAPI = (function() {
 
     // public interface
     return {
-        get_all_most_common_characters: get_all_most_common_characters,
-        get_most_common_word: get_most_common_word,
-        get_most_common_character: get_most_common_character
+        getAllMostCommonCharacters: getAllMostCommonCharacters,
+        getMostCommonWord: getMostCommonWord,
+        getMostCommonCharacter: getMostCommonCharacter
     };
 })();
 
 
 var GradingTestStrategy = (function() {
-    var all_most_common_characters_;
+    var vocabularies_ = [];
     var index_;
 
     var init = function() {
         index_ = 0;
-        var deferred_obj = $.Deferred();
-        if (!all_most_common_characters_)
+        var deferredObj = $.Deferred();
+        if (!vocabularies_)
         {
+            HornbookAPI.getAllMostCommonCharacters()
+            .done(function(data) {
+
+            });
             $.when(HornbookAPI.get_all_most_common_characters())
             .done(function(data) {
                 all_most_common_characters_ = data;

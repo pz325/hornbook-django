@@ -16,7 +16,7 @@ $(document).ready(function(){
     /**
      * deferred
      */
-    var get_study_history = function() {
+    var getStudyHistory = function() {
         var deferred_obj = $.Deferred();
         var range = $('#select_previous_study option:selected').val();
         console.log('range:', range);
@@ -43,7 +43,7 @@ $(document).ready(function(){
         return deferred_obj.promise();
     };
 
-    var set_vocabularies = function(vocabularies) {
+    var setVocabularies = function(vocabularies) {
         console.log('set vocabularies: ', vocabularies);
         // TODO: display all vocabularies
         // update StudyStrategy and Flashcard
@@ -54,17 +54,15 @@ $(document).ready(function(){
     $("#button_save_study").click(function(){
         var today_study = $("#input_today_study").val();
         StudyAPI.save_study(today_study)
-        .done(function() {
-            get_study_history()
-            .done(function(data, textStatus, jqXHR) {
-                // set vocabularies
-                console.log(data);
-                var v = JSON.parse(data).study_history;
-                today_study.split(' ').forEach(function(element) {
-                    v.push({u_char: element});
-                });
-                set_vocabularies(v);
+        .pipe(getStudyHistory)
+        .done(function(data, textStatus, jqXHR) {
+            // set vocabularies
+            console.log(data);
+            var v = JSON.parse(data).study_history;
+            today_study.split(' ').forEach(function(element) {
+                v.push({u_char: element});
             });
+            setVocabularies(v);
         });
     });
 }); 

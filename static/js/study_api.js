@@ -6,7 +6,7 @@ var StudyAPI = (function() {
      * @param start_date "10/02/2013"
      * @param end_date "10/03/2013"
      */
-    var get_study_between = function(start_date, end_date) {
+    var getStudyBetween = function(start_date, end_date) {
         console.log('start_date: ', start_date);
         console.log('end_date: ', end_date);
         var promise = $.ajax({
@@ -23,7 +23,7 @@ var StudyAPI = (function() {
     /**
      * @param vocabularies "u0x8fd9 u0x90a3 u0x6765"
      */
-    var save_study = function(vocabularies) {
+    var saveStudy = function(vocabularies) {
         var promise = $.ajax({
             type: "POST",
             url: API_SAVE_STUDY_URL,
@@ -35,8 +35,8 @@ var StudyAPI = (function() {
     };
 
     return {
-        get_study_between: get_study_between,
-        save_study: save_study
+        getStudyBetween: getStudyBetween,
+        saveStudy: saveStudy
     };
 })();
 
@@ -54,43 +54,42 @@ var StudyStrategy = (function() {
     };
 
     /**
-     * @param vocabularies [{u_char: u0x1234}, {u_char: u0x1345}]
+     * @param vocabularies 
+            [
+                [{u_char: u0x1234}, {u_char: u0x1345}],
+                [{u_char: u0x1234}]
+            ]
      */
-    var set_vocabularies = function(vocabularies) {
+    var setVocabularies = function(vocabularies) {
         vocabularies_ = vocabularies;
         index_ = 0;
     };
 
-    var clear_vocabularies = function() {
+    var clearVocabularies = function() {
         vocabularies_ = [];
         index_ = 0;
     }
 
     /*
-     * @return u_char
+     * @return [{u_char: 0x1224}, {u_char: 0x2343}]
      */
-    var get_next_char = function() {
-        var u_char = null;
+    var getNextVocabulary = function() {
+        var v = [];
         if (vocabularies_.length > 0) 
         {
-            u_char = vocabularies_[index_]["u_char"];
+            v = vocabularies_[index_];
             index_ += 1;
             if (index_ >= vocabularies_.length) {
                 index_ = 0;
             }
         }
-        return u_char;
-    };
-
-    var get_next_word = function(){
-        return "";
+        return v;
     };
 
     return {
         init: init,
-        set_vocabularies: set_vocabularies,
-        clear_vocabularies: clear_vocabularies,
-        get_next_char: get_next_char,
-        get_next_word: get_next_word
+        setVocabularies: setVocabularies,
+        clearVocabularies: clearVocabularies,
+        getNextVocabulary: getNextVocabulary
     };
 })();
