@@ -40,3 +40,8 @@ Use Django urls.py to contrl web service Url mapping, and templates
   /accounts/login
   /admin/
   /hornbook_api/
+
+
+Plain data structure
+----
+Character and word are unified to the concept of Vocabulary, which is a plain string holding unicode chars. This plain data structure is transferred between JavaScript methods, as well as web services.
