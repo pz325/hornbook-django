@@ -46,7 +46,7 @@ $(document).ready(function() {
 
     var setVocabularies = function(vocabularies) {
         console.log('set vocabularies: ', vocabularies);
-        // TODO: display all vocabularies
+        // display all vocabularies
         $(".all_study").text(vocabularies);
         // update StudyStrategy and Flashcard
         StudyStrategy.setVocabularies(vocabularies);
@@ -54,7 +54,8 @@ $(document).ready(function() {
     };
 
     $("#button_save_study").click(function(){
-        var today_study = $("#input_today_study").val();
+        // TODO ignore empty split result
+        var today_study = $("#input_today_study").val().trim();
         StudyAPI.saveStudy(today_study)
         .pipe(getStudyHistory)
         .done(function(data, textStatus, jqXHR) {
