@@ -24,11 +24,11 @@ def save_study(request):
     '''
     HTTP POST /study/save_study
     Data 
-        vocabularies e.g. "u0x2345 u0x1111"
+        vocabularies e.g. "u0x2345u0x1111"
     Return
         {
             user: "xinrong",
-            vocabularies: "u0x2345 u0x1111",
+            vocabularies: "u0x2345u0x1111",
             study_date = "2013-10-02"
         }
     '''
@@ -50,24 +50,22 @@ def save_study(request):
 def get_study_between(request):
     '''
     HTTP GET /study/get_study_between?start_date&end_date
-    Return 
-        {
-            start_date: 2013-10-02,
-            end_date: 2013-10-03,
-            study_history: [{u_char: u0x2345}, {u_char: u0x1111}]
-        }
+    Return [u0x2345, u0x1111, ...]
     '''
     start_date = request.GET['start_date']
     end_date = request.GET['end_date']
     start_date = datetime.datetime.strptime(start_date, '%m/%d/%Y').date()
     end_date = datetime.datetime.strptime(end_date, '%m/%d/%Y').date() + datetime.timedelta(days=1)
-    ret = dict(
-        start_date = start_date,
-        end_date = end_date,
-        study_history = []
-        )
     q = StudyHistory.objects.filter(user=request.user, 
         study_date__range=(start_date, end_date))
-    for h in q:
-        ret['study_history'].append(dict(u_char=h.vocabulary))
+    ret = [h.vocabulary for h in q]
+    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
+@login_required
+def get_all(request):
+    '''
+    HTTP GET /study/get_all
+    Return [u0x2345, u0x1111, ...]
+    '''
+    ret = [h.vocabulary for h in StudyHistory.objects.all()]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))

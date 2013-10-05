@@ -7,7 +7,7 @@
 {% block content %}
     <div>
         <h1>Save Study</h1>
-        <input type="text" id="vocabularies"/>
+        <input type="text" id="vocabularies" value="这 那个"/>
         <button id="button_api_save_study">POST</button>
         <div class="prettyprint">
             Status: <p id="api_save_study_status"></p>
@@ -27,6 +27,16 @@
             Data: <p id="api_get_study_between_data"></p>
         </div>
     </div>
+
+    <div>
+        <h1>Get All</h1>
+        <button id="button_api_get_all">GET</button>
+        <div class="prettyprint">
+            Status: <p id="api_get_all_status"></p>
+            Headers: <p id="api_get_all_headers"></p>
+            Data: <p id="api_get_all_data"></p>
+        </div>
+    </div>
 {% endblock %}
 
 {% block js %}
@@ -40,7 +50,7 @@
             var end_date = $("#end_date").val();
             console.log('start_date', start_date);
             console.log('end_date', end_date);
-            StudyAPI.get_study_between(start_date, end_date)
+            StudyAPI.getStudyBetween(start_date, end_date)
             .done(function(data, textStatus, jqXHR){
                 $("#api_get_study_between_status").text(jqXHR.status);
                 $("#api_get_study_between_headers").text(jqXHR.getAllResponseHeaders());
@@ -51,11 +61,20 @@
         $("#button_api_save_study").click(function(){
             var vocabularies = $("#vocabularies").val();
             console.log(vocabularies);
-            StudyAPI.save_study(vocabularies)
+            StudyAPI.saveStudy(vocabularies)
             .done(function(data, textStatus, jqXHR){
                 $("#api_save_study_status").text(jqXHR.status);
                 $("#api_save_study_headers").text(jqXHR.getAllResponseHeaders());
                 $("#api_save_study_data").text(data);
+            });
+        });
+
+        $("#button_api_get_all").click(function(){
+            StudyAPI.getAll()
+            .done(function(data, textStatus, jqXHR){
+                $("#api_get_all_status").text(jqXHR.status);
+                $("#api_get_all_headers").text(jqXHR.getAllResponseHeaders());
+                $("#api_get_all_data").text(data);
             });
         });
     });
