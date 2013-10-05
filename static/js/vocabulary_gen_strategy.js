@@ -84,11 +84,19 @@ var StudyStrategy = (function() {
         return v;
     };
 
+    /**
+     * @return ["u0x1234u0x3456", "u0x3456"]
+     */
+    var getAllVocabularies = function() {
+        return vocabularies_;
+    }
+
     return {
         init: init,
         setVocabularies: setVocabularies,
         clearVocabularies: clearVocabularies,
-        getNextVocabulary: getNextVocabulary
+        getNextVocabulary: getNextVocabulary,
+        getAllVocabularies: getAllVocabularies
     };
 })();
 

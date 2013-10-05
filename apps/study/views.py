@@ -24,7 +24,7 @@ def save_study(request):
     '''
     HTTP POST /study/save_study
     Data 
-        vocabularies e.g. "u0x2345u0x1111"
+        vocabularies e.g. "u0x2345 u0x1111 u0x1111u0x1234"
     Return
         {
             user: "xinrong",
@@ -34,10 +34,12 @@ def save_study(request):
     '''
     vocabularies = request.POST['vocabularies'].split(' ')
     today = datetime.date.today()
+    # update today's study history
     tomorrow = today + datetime.timedelta(days=1)
     StudyHistory.objects.filter(user=request.user, 
         study_date__range=(today, tomorrow)).delete()
     for v in vocabularies:
+        # TODO if vocabulary has been learned, update its learning date
         h = StudyHistory(user=request.user, vocabulary=v, study_date=today)
         h.save()
 

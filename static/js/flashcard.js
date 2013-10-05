@@ -3,6 +3,7 @@ var Flashcard = (function(){
     var $flashcardDiv;
     var strategy_;
     var lastWord_;  // lastWord_ "0x34560x3321
+    var hanCharacterDivClickCallback_;
 
     var logState = function() {
         console.log("last word: ", lastWord_);
@@ -12,17 +13,13 @@ var Flashcard = (function(){
      * flashcardDiv = $("#flashcard")
      * strategy = GradingTest
      */
-    var init = function(flashcardDiv, strategy){
+    var init = function(flashcardDiv, strategy, hanCharacterDivClickCallback){
         $flashcardDiv = flashcardDiv;
         strategy_ = strategy;
-
+        hanCharacterDivClickCallback_ = hanCharacterDivClickCallback;
         strategy_.init()
         .done(function() {
-            lastWord_ = strategy_.getNextVocabulary();
-            if (lastWord_) {
-                logState();
-                displayVocabulary(lastWord_);
-            }
+            displayVocabulary(strategy_.getNextVocabulary());
         });
     };
 
@@ -35,6 +32,9 @@ var Flashcard = (function(){
                     text: u_char,
                     style: "cursor: pointer"
         });
+        if (hanCharacterDivClickCallback_) {
+            hanCharacterDiv.click(hanCharacterDivClickCallback_);
+        }
         return hanCharacterDiv;
     };
 

@@ -1,5 +1,10 @@
-$(document).ready(function(){
-    Flashcard.init($("#flashcard"), StudyStrategy);
+$(document).ready(function() {
+
+    var hanCharacterDivClickCallback = function() {
+        Flashcard.displayVocabulary(StudyStrategy.getNextVocabulary());
+    };
+
+    Flashcard.init($("#flashcard"), StudyStrategy, hanCharacterDivClickCallback);
 
     function getLastWeek() {
         var today = new Date();
@@ -42,6 +47,7 @@ $(document).ready(function(){
     var setVocabularies = function(vocabularies) {
         console.log('set vocabularies: ', vocabularies);
         // TODO: display all vocabularies
+        $(".all_study").text(vocabularies);
         // update StudyStrategy and Flashcard
         StudyStrategy.setVocabularies(vocabularies);
         Flashcard.displayVocabulary(StudyStrategy.getNextVocabulary());
@@ -54,10 +60,7 @@ $(document).ready(function(){
         .done(function(data, textStatus, jqXHR) {
             // set vocabularies
             console.log(data);
-            var v = JSON.parse(data);
-            today_study.split(' ').forEach(function(element) {
-                v.push(element);
-            });
+            var v = JSON.parse(data);  // v now includes today's study
             setVocabularies(v);
         });
     });
