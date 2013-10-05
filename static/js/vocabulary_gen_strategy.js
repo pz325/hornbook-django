@@ -1,5 +1,5 @@
 var GradingTestStrategy = (function() {
-    var vocabularies_ = "";
+    var vocabularies_ = [];
     var index_;
 
     /**
@@ -8,7 +8,7 @@ var GradingTestStrategy = (function() {
     var init = function() {
         index_ = 0;
         var deferredObj = $.Deferred();
-        if (vocabularies_ === "")
+        if (vocabularies_.length === 0)
         {
             HornbookAPI.getAllMostCommonCharacters()
             .done(function(data) {
@@ -26,10 +26,13 @@ var GradingTestStrategy = (function() {
      * @return "0x12340x3456"
      */
     var getNextVocabulary = function() {
-        var v = vocabularies_[index_];
-        index_ += 1;
-        if (index_ >= vocabularies_.length) {
-            index_ = 0;
+        var v = "";
+        if (vocabularies_.length > 0) {
+            var v = vocabularies_[index_];
+            index_ += 1;
+            if (index_ >= vocabularies_.length) {
+                index_ = 0;
+            }    
         }
         return v;
     };
@@ -54,11 +57,7 @@ var StudyStrategy = (function() {
     };
 
     /**
-     * @param vocabularies 
-            [
-                [{u_char: u0x1234}, {u_char: u0x1345}],
-                [{u_char: u0x1234}]
-            ]
+     * @param vocabularies ["u0x1234u0x3456", "u0x3456"]
      */
     var setVocabularies = function(vocabularies) {
         vocabularies_ = vocabularies;
@@ -71,17 +70,16 @@ var StudyStrategy = (function() {
     }
 
     /*
-     * @return [{u_char: 0x1224}, {u_char: 0x2343}]
+     * @return "0x12240x2343"
      */
     var getNextVocabulary = function() {
-        var v = [];
-        if (vocabularies_.length > 0) 
-        {
-            v = vocabularies_[index_];
+        var v = "";
+        if (vocabularies_.length > 0) {
+            var v = vocabularies_[index_];
             index_ += 1;
             if (index_ >= vocabularies_.length) {
                 index_ = 0;
-            }
+            }    
         }
         return v;
     };
