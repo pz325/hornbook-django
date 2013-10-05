@@ -1,30 +1,33 @@
 $(document).ready(function(){
     Flashcard.init($("#flashcard"), GradingTestStrategy);
 
-    var next_char = function() {
-        var u_char = GradingTest.get_next_char();
-        console.log("char to display: ", u_char);
-        Flashcard.display_char(u_char);
+    var nextVocabulary = function() {
+        var vocabulary = GradingTestStrategy.getNextVocabulary();
+        console.log("vocabulary to display: ", vocabulary);
+        Flashcard.displayVocabulary(vocabulary);
     };
 
-    var add_to_user_vocabulary = function(u_char) {
+    /**
+     * @vocabulary [{u_char: u0x2345}, {u_char: u0x1234}, ...]
+     */
+    var addToUserVocabulary = function(vocabulary) {
         var request = $.ajax({
-            type: "POST",
             url: "/user_vocabularies/add_to_user_vocabulary/",
+            contentType: "application/json; charset=UTF-8",
             data: {
-                "vocabulary": u_char,
+                "vocabulary": vocabulary,
             }
         });
     }
 
     // binding button click event
     $("#button_yes").click(function() {
-        var u_char = Flashcard.get_ref_character();
-        add_to_user_vocabulary(u_char);
-        next_char(); 
+        var vocabulary = Flashcard.getLastWord();
+        addToUserVocabulary(vocabulary);
+        nextVocabulary(); 
     });
     
     $("#button_no").click(function() { 
-        next_char(); 
+        nextVocabulary(); 
     });
 });

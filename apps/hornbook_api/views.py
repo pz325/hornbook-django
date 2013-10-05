@@ -15,29 +15,29 @@ def index(request):
     '''
     return render_to_response('hornbook_api/index.html')
 
+def api_index(request):
+    '''
+    Test page for hornbook_api
+    '''
+    return render_to_response('hornbook_api/api.html')
+
 def get_most_common_character(request):
     '''
     HTTP GET /api/most_common_character
     
-    Resp: [{"u_char": "\u60c5"}]
+    Resp: "\u60c5"
     '''
     u_char = MostCommonCharacter.get_one()
-    return_json = json.dumps([dict(u_char=u_char)])
-    return HttpResponse(return_json)
+    return HttpResponse(u_char)
 
 def get_all_most_common_characters(request):
     '''
     HTTP GET /api/all_most_common_characters
 
-    Resp: 
-        [
-            [{"u_char": "\u4e86"}], 
-            [{"u_char": "\u662f"}], 
-            ...
-        ], sorted by frequency
+    Resp: ["\u4e86", "\u662f", ...], sorted by frenquency
     '''
     most_common_characters = MostCommonCharacter.get_all()
-    most_common_characters = [[dict(u_char=ch)] for (ch, f) in most_common_characters]
+    most_common_characters = [ch for (ch, f) in most_common_characters]
     return_json = json.dumps(most_common_characters)
     return HttpResponse(return_json)
 
@@ -45,7 +45,7 @@ def get_most_common_word(request):
     '''
     HTTP GET /api/most_common_word?ref_character=一&last_word=一个
 
-    Resp: [{"u_chars": "\u4e00"}, {"u_char": "\u4e5d"}, {"u_char": "\u516d"}] 
+    Resp: "\u4e00\u4e5\u516d"
     '''
     ref_character = request.GET['ref_character']
     last_word = request.GET['last_word']
@@ -60,6 +60,4 @@ def get_most_common_word(request):
         u_word = word_candidates[index]
         if u_word != last_word:
             break
-    ret = [dict(u_chars=ch) for ch in u_word]
-    return_json = json.dumps(ret)
-    return HttpResponse(return_json)
+    return HttpResponse(u_word)

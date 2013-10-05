@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block preload_js %}
+    <script type="text/javascript" src="/js/hornbook_api.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h1>Get All Most Common Characters</h1>
+        <button id="button_api_get_all_most_common_characters">POST</button>
+        <div class="prettyprint">
+            Status: <p id="api_get_all_most_common_characters_status"></p>
+            Headers: <p id="api_get_all_most_common_characters_headers"></p>
+            Data: <p id="api_get_all_most_common_characters_data"></p>
+        </div>
+    </div>
+
+    <div>
+        <h1>Get Most Common Word</h1>
+        <input type="text" id="ref_character" value="一"/>
+        <input type="text" id="last_word" value="一个"/>
+        <button id="button_api_get_most_common_word">GET</button>
+        <div class="prettyprint">
+            Status: <p id="api_get_most_common_word_status"></p>
+            Headers: <p id="api_get_most_common_word_headers"></p>
+            Data: <p id="api_get_most_common_word_data"></p>
+        </div>
+    </div>
+
+    <div>
+        <h1>Get Most Common Character</h1>
+        <button id="button_api_get_most_common_character">GET</button>
+        <div class="prettyprint">
+            Status: <p id="api_get_most_common_character_status"></p>
+            Headers: <p id="api_get_most_common_character_headers"></p>
+            Data: <p id="api_get_most_common_character_data"></p>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+<script type="text/javascript">
+    $(function() {
+        $("#button_api_get_all_most_common_characters").click(function(){
+            HornbookAPI.getAllMostCommonCharacters()
+            .done(function(data, textStatus, jqXHR){
+                if (jqXHR) {
+                    $("#api_get_all_most_common_characters_headers").text(jqXHR.getAllResponseHeaders());
+                }
+                else {
+                    $("#api_get_all_most_common_characters_headers").text("");   
+                }
+                $("#api_get_all_most_common_characters_status").text(textStatus);
+                $("#api_get_all_most_common_characters_data").text(data);
+            });
+        });
+
+        $("#button_api_get_most_common_word").click(function(){
+            var ref_character = $("#ref_character").val();
+            var last_word = $("#last_word").val();
+            HornbookAPI.getMostCommonWord(ref_character, last_word)
+            .done(function(data, textStatus, jqXHR){
+                $("#api_get_most_common_word_status").text(jqXHR.status);
+                $("#api_get_most_common_word_headers").text(jqXHR.getAllResponseHeaders());
+                $("#api_get_most_common_word_data").text(data);
+            });
+        });
+
+        $("#button_api_get_most_common_character").click(function(){
+            HornbookAPI.getMostCommonCharacter()
+            .done(function(data, textStatus, jqXHR){
+                $("#api_get_most_common_character_status").text(jqXHR.status);
+                $("#api_get_most_common_character_headers").text(jqXHR.getAllResponseHeaders());
+                $("#api_get_most_common_character_data").text(data);
+            });
+        });
+    });
+</script>
+{% endblock %}

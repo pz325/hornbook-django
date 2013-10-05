@@ -54,7 +54,7 @@ var Flashcard = (function(){
         lastWord_ = vocabulary;
         logState();
         $flashcardDiv.empty();
-        lastWord_.forEach(function(element){
+        lastWord_.forEach(function(element) {
             $flashcardDiv.append(genHanCharacterDiv(element["u_char"]));
         });
     };
