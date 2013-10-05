@@ -1,11 +1,14 @@
 var GradingTestStrategy = (function() {
-    var vocabularies_ = [];
+    var vocabularies_ = "";
     var index_;
 
+    /**
+     * @return a promise object
+     */
     var init = function() {
         index_ = 0;
         var deferredObj = $.Deferred();
-        if (vocabularies_.length === 0)
+        if (vocabularies_ === "")
         {
             HornbookAPI.getAllMostCommonCharacters()
             .done(function(data) {
@@ -20,7 +23,7 @@ var GradingTestStrategy = (function() {
     };
 
     /**
-     * @return [{u_char: 0x1234}, {u_char: 0x3456}]
+     * @return "0x12340x3456"
      */
     var getNextVocabulary = function() {
         var v = vocabularies_[index_];

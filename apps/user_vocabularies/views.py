@@ -16,31 +16,22 @@ def add_to_user_vocabulary(request):
     '''
     @login_required
     HTTP POST user_vocabularies/add_to_user_vocabulary
-    Data  vocabulary: [{u_char: u0x2345}, {u_char: u0x1234}, ...]
+    Data  vocabulary: "u0x2345u0x1234"
     '''
     # import pdb; pdb.set_trace()
-    logger.debug(request.body)
-    vocabulary = simplejson.loads(request.body)
-    logger.debug(vocabulary);
-    # convert to unicode string: "u0x2345u0x1234"
-    v_str = "";
-    for ch in vocabulary:
-        v_str += ch["u_char"]
-    logger.debug(v_str)
-
+    vocabulary = request.POST["vocabulary"]
 
     q = UserVocabulary.objects.filter(user=request.user)
-    q = q.filter(vocabulary=v_str)
+    q = q.filter(vocabulary=vocabulary)
     
     if q.count() == 0:
-        v = UserVocabulary(user=request.user, vocabulary=v_str)
+        v = UserVocabulary(user=request.user, vocabulary=vocabulary)
         v.save()
         ret = dict(user=request.user.username,
-            vocabulary=v_str,
+            vocabulary=vocabulary,
             status="added");
-        return HttpResponse(json.dumps(ret))
     else:
         ret = dict(user=request.user.username,
-            vocabulary=v_str,
+            vocabulary=vocabulary,
             status="not added");
-        return HttpResponse(json.dumps(ret))
+    return HttpResponse(json.dumps(ret))

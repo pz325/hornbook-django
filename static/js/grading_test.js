@@ -8,12 +8,12 @@ $(document).ready(function(){
     };
 
     /**
-     * @vocabulary [{u_char: u0x2345}, {u_char: u0x1234}, ...]
+     * @vocabulary "u0x2345u0x1234"
      */
     var addToUserVocabulary = function(vocabulary) {
         var request = $.ajax({
+            type: "POST",
             url: "/user_vocabularies/add_to_user_vocabulary/",
-            contentType: "application/json; charset=UTF-8",
             data: {
                 "vocabulary": vocabulary,
             }
@@ -23,6 +23,7 @@ $(document).ready(function(){
     // binding button click event
     $("#button_yes").click(function() {
         var vocabulary = Flashcard.getLastWord();
+        console.log('vocabulary to save: ', vocabulary);
         addToUserVocabulary(vocabulary);
         nextVocabulary(); 
     });

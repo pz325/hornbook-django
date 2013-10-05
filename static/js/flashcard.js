@@ -2,19 +2,10 @@
 var Flashcard = (function(){
     var $flashcardDiv;
     var strategy_;
-    var lastWord_ = [];  // lastWord_ [{u_char: 0x3456}, {u_char: 0x3321}]
+    var lastWord_;  // lastWord_ "0x34560x3321
 
     var logState = function() {
-        var w = "";
-        if (lastWord_.length > 0) {
-            lastWord_.forEach(function(element){
-                w += element["u_char"];
-            });
-        }
-        else {
-            w = "not set";
-        }
-        console.log("last word: ", w);
+        console.log("last word: ", lastWord_);
     };
 
     /**
@@ -36,7 +27,7 @@ var Flashcard = (function(){
     };
 
     /**
-     * @param u_char
+     * @param 0x1234
      */
     var genHanCharacterDiv = function(u_char){
         var hanCharacterDiv = $("<div/>", {
@@ -48,19 +39,19 @@ var Flashcard = (function(){
     };
 
     /**
-     * @param vocabulary [{u_char: 0x2312}, {u_char: 0x2233}]
+     * @param vocabulary "0x23120x2233"
      */
     var displayVocabulary = function(vocabulary) {
         lastWord_ = vocabulary;
         logState();
         $flashcardDiv.empty();
-        lastWord_.forEach(function(element) {
-            $flashcardDiv.append(genHanCharacterDiv(element["u_char"]));
+        lastWord_.split("").forEach(function(element) {
+            $flashcardDiv.append(genHanCharacterDiv(element));
         });
     };
 
     /**
-     * @return [{u_char: 0x2312}, {u_char: 0x2233}]
+     * @return "0x23120x2233"
      */
     var getLastWord = function() {
         return lastWord_;
