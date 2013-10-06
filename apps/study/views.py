@@ -33,6 +33,8 @@ def save_study(request):
         }
     '''
     vocabularies = request.POST['vocabularies'].split(' ')
+    if vocabularies == '':
+        return HttpResponse('nothing saved')
     today = datetime.date.today()
     # update today's study history
     tomorrow = today + datetime.timedelta(days=1)
