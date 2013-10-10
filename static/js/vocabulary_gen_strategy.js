@@ -1,3 +1,10 @@
+//+ Jonas Raoni Soares Silva
+//@ http://jsfromhell.com/array/shuffle [v1.0]
+function shuffle(o){ //v1.0
+    for(var j, x, i = o.length; i; j = Math.floor(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+};
+
 var GradingTestStrategy = (function() {
     var vocabularies_ = [];
     var index_;
@@ -60,7 +67,13 @@ var StudyStrategy = (function() {
      * @param vocabularies ["u0x1234u0x3456", "u0x3456"]
      */
     var setVocabularies = function(vocabularies) {
-        vocabularies_ = vocabularies;
+        vocabularies_ = [];
+        for (var i = 0; i < vocabularies.length; ++i) {
+            if (vocabularies[i]) {
+                vocabularies_.push(vocabularies[i]);
+            }
+        }
+        vocabularies_ = shuffle(vocabularies_);
         index_ = 0;
     };
 
@@ -78,6 +91,7 @@ var StudyStrategy = (function() {
             var v = vocabularies_[index_];
             index_ += 1;
             if (index_ >= vocabularies_.length) {
+                vocabularies_ = shuffle(vocabularies_);
                 index_ = 0;
             }    
         }
