@@ -60,7 +60,7 @@
 
         $("#button_api_save_study").click(function(){
             var vocabularies = $("#vocabularies").val();
-            console.log(vocabularies);
+            console.log('vocabularies: ', vocabularies);
             StudyAPI.saveStudy(vocabularies)
             .done(function(data, textStatus, jqXHR){
                 $("#api_save_study_status").text(jqXHR.status);

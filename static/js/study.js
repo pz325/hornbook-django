@@ -24,7 +24,7 @@ $(document).ready(function() {
     var getStudyHistory = function() {
         var deferred_obj = $.Deferred();
         var range = $('#select_previous_study option:selected').val();
-        console.log('range:', range);
+        //console.log('range:', range);
 
         var today = new Date();
         var end_date = $.datepicker.formatDate('mm/dd/yy', new Date());
@@ -35,8 +35,8 @@ $(document).ready(function() {
         if (range === "last_month") {
             start_date = $.datepicker.formatDate('mm/dd/yy', getLastMonth());
         }
-        console.log('end_date (today):', end_date);
-        console.log('start_date: ', start_date);
+        //console.log('end_date (today):', end_date);
+        //console.log('start_date: ', start_date);
         StudyAPI.getStudyBetween(start_date, end_date)
         .then(function(data, textStatus, jqXHR) {
             deferred_obj.resolve(data, textStatus, jqXHR);
@@ -56,11 +56,12 @@ $(document).ready(function() {
     $("#button_save_study").click(function(){
         // TODO ignore empty split result
         var today_study = $("#input_today_study").val().trim();
+        console.log('today study: ', today_study)
         StudyAPI.saveStudy(today_study)
         .pipe(getStudyHistory)
         .done(function(data, textStatus, jqXHR) {
             // set vocabularies
-            console.log(data);
+            console.log('history data: ', data);
             var v = JSON.parse(data);  // v now includes today's study
             setVocabularies(v);
         });

@@ -41,9 +41,14 @@ def save_study(request):
     StudyHistory.objects.filter(user=request.user, 
         study_date__range=(today, tomorrow)).delete()
     for v in vocabularies:
-        # TODO if vocabulary has been learned, update its learning date
-        h = StudyHistory(user=request.user, vocabulary=v, study_date=today)
-        h.save()
+        if v == '':
+            continue
+        learned = StudyHistory.objects.filter(vocabulary=v)
+        if learned:
+            learned.update(study_date=today)
+        else:
+            h = StudyHistory(user=request.user, vocabulary=v, study_date=today)
+            h.save()
 
     ret = dict(user=request.user.username,
         vocabularies=vocabularies,
