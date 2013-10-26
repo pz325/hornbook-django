@@ -8,9 +8,10 @@
 {% endblock %}
 
 {% block content %}
-    <div class="today_study">
+    <div id="controllers">
         Today Study: <input type="text" id="input_today_study">
-        <button id="button_save_study">Submit</button>
+        <button id="button_add_new">Add New</button>
+        <button id="button_load_history">Load History</button>
     </div>
     <div class="previous_study">
         Previous Study: <select id="select_previous_study">
@@ -21,5 +22,8 @@
     <div class="all_study">
     </div>
     <div id= "flashcard", class="flashcard">
+    </div>
+    <div class="recap">
+        <button id="button_recap">Recap</button>
     </div>
 {% endblock %}

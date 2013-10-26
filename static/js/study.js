@@ -24,7 +24,7 @@ $(document).ready(function() {
     var getStudyHistory = function() {
         var deferred_obj = $.Deferred();
         var range = $('#select_previous_study option:selected').val();
-        //console.log('range:', range);
+        console.log('range:', range);
 
         var today = new Date();
         var end_date = $.datepicker.formatDate('mm/dd/yy', new Date());
@@ -53,8 +53,7 @@ $(document).ready(function() {
         Flashcard.displayVocabulary(StudyStrategy.getNextVocabulary());
     };
 
-    $("#button_save_study").click(function(){
-        // TODO ignore empty split result
+    $("#button_add_new").click(function(){
         var today_study = $("#input_today_study").val().trim();
         console.log('today study: ', today_study)
         StudyAPI.saveStudy(today_study)
@@ -66,4 +65,16 @@ $(document).ready(function() {
             setVocabularies(v);
         });
     });
+
+    $("#button_load_history").click(function() {
+        getStudyHistory()
+        .done(function(data, textStatus, jqXHR) {
+            console.log('history data: ', data);
+            var v = JSON.parse(data);
+            setVocabularies(v);
+        });
+    });
+
+    // auto load history
+    $("#button_load_history").click();
 }); 
