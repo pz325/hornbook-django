@@ -61,22 +61,28 @@ VocabularyList.prototype.add = function(vocabulary) {
     this.vocabularies_.push(vocabulary);
 };
 
+VocabularyList.prototype.isEmpty = function() {
+    if (this.vocabularies_.length === 0) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
 
 var GradingTestStrategy = (function() {
-    var vocabularies_ = [];
-    var index_;
+    var vocabularyList_ = new VocabularyList();
 
     /**
      * @return a promise object
      */
     var init = function() {
-        index_ = 0;
         var deferredObj = $.Deferred();
-        if (vocabularies_.length === 0)
+        if (vocabularyList_.isEmpty())
         {
             HornbookAPI.getAllMostCommonCharacters()
             .done(function(data) {
-                vocabularies_ = data;
+                vocabularyList_.set(data);
                 deferredObj.resolve();
             });
         }
@@ -86,24 +92,12 @@ var GradingTestStrategy = (function() {
         return deferredObj.promise();
     };
 
-    /**
-     * @return "0x12340x3456"
-     */
-    var getNextVocabulary = function() {
-        var v = "";
-        if (vocabularies_.length > 0) {
-            var v = vocabularies_[index_];
-            index_ += 1;
-            if (index_ >= vocabularies_.length) {
-                index_ = 0;
-            }    
-        }
-        return v;
-    };
-
     return {
         init: init,
-        getNextVocabulary: getNextVocabulary
+        getNextVocabulary: function(){
+            return vocabularyList_.getNext();
+        },
+        vocabularyList: vocabularyList_
     };
 })();
 

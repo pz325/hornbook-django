@@ -1,6 +1,4 @@
 $(document).ready(function(){
-    Flashcard.init($("#flashcard"), GradingTestStrategy);
-
     var nextVocabulary = function() {
         var vocabulary = GradingTestStrategy.getNextVocabulary();
         console.log("vocabulary to display: ", vocabulary);
@@ -30,5 +28,16 @@ $(document).ready(function(){
     
     $("#button_no").click(function() { 
         nextVocabulary(); 
+    });
+
+    // initialise page
+    GradingTestStrategy.init()
+    .done(function() {
+        console.log("GradingTestStrategy initialised: ");
+        Flashcard.init($("#flashcard"));
+        Flashcard.setHanCharacterDivClickCallback(function() {
+            Flashcard.displayVocabulary(GradingTestStrategy.getNextVocabulary());
+        });
+        Flashcard.displayVocabulary(GradingTestStrategy.getNextVocabulary());
     });
 });
