@@ -41,7 +41,7 @@ $(document).ready(function() {
         var vocabularies = strategy.getAllVocabularies();
         console.log('set vocabularies: ', vocabularies);
         // display all vocabularies
-        $(".all_study").text(vocabularies);
+        $("#all_study").text(vocabularies);
         // bind flashcard strategy
         Flashcard.setHanCharacterDivClickCallback(function() {
             Flashcard.displayVocabulary(strategy.getNextVocabulary());
@@ -51,6 +51,7 @@ $(document).ready(function() {
 
     var clearRecap = function() {
         RecapStrategy.clearVocabularies();
+        $("#recap #recap_list").text("");
     };
 
     $("#button_add_new").click(function(){
@@ -83,6 +84,7 @@ $(document).ready(function() {
     $("#button_add_to_recap_list").click(function() {
         console.log('recap: ', Flashcard.getLastWord());
         RecapStrategy.add(Flashcard.getLastWord());
+        $("#recap #recap_list").text(RecapStrategy.getAllVocabularies());
     });
 
     $("#button_recap").click(function() {
