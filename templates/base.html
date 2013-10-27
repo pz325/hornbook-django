@@ -22,15 +22,19 @@
 
     <div class="container">
       <div class="header">
-        <a href="/">Home</a>
-        {% if user.is_authenticated %}
-          <span>{{user.username}}</span>
-          <a href="/accounts/logout/">Log out</a>
-        {% else %}
-          <a href="/accounts/login/">Log in</a>
-        {% endif %}
-        {% block page-header %}
-        {% endblock %}
+        <div class="menu">
+          <a href="/">Home</a>
+          {% block page-header %}
+          {% endblock %}
+        </div>
+        <div class="account">
+          {% if user.is_authenticated %}
+            <span>{{user.username}}</span>
+            <a href="/accounts/logout/">Log out</a>
+          {% else %}
+            <a href="/accounts/login/">Log in</a>
+          {% endif %}
+        </div>
       </div>
       
       <div class="mainbody">

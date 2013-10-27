@@ -1,3 +1,31 @@
+/* header */
+.header
+{
+    overflow: auto;
+}
+.header .menu
+{
+    float: left;
+}
+.header .account
+{
+    float: right;
+}
+
+/* Study page controllers*/
+.controllers_wrapper
+{
+    overflow: auto;
+}
+.controllers_wrapper .controllers
+{
+    float: left;
+}
+.controllers_wrapper .settings
+{
+    float: right;
+}
+
 /* han_character styles */
 .han_character
 {
