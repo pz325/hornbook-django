@@ -1,11 +1,4 @@
 $(document).ready(function() {
-
-    var hanCharacterDivClickCallback = function() {
-        Flashcard.displayVocabulary(StudyStrategy.getNextVocabulary());
-    };
-
-    Flashcard.init($("#flashcard"), StudyStrategy, hanCharacterDivClickCallback);
-
     function getLastWeek() {
         var today = new Date();
         var lastWeek = new Date(today.getTime()-1000*60*60*24*7);
@@ -44,16 +37,25 @@ $(document).ready(function() {
         return deferred_obj.promise();
     };
 
-    var setVocabularies = function(vocabularies) {
+    var setVocabularies = function(strategy) {
+        var vocabularies = strategy.getAllVocabularies();
         console.log('set vocabularies: ', vocabularies);
         // display all vocabularies
         $(".all_study").text(vocabularies);
-        // update StudyStrategy and Flashcard
-        StudyStrategy.setVocabularies(vocabularies);
-        Flashcard.displayVocabulary(StudyStrategy.getNextVocabulary());
+        // bind flashcard strategy
+        Flashcard.setHanCharacterDivClickCallback(function() {
+            Flashcard.displayVocabulary(strategy.getNextVocabulary());
+        });
+        Flashcard.displayVocabulary(strategy.getNextVocabulary());
+    };
+
+    var clearRecap = function() {
+        RecapStrategy.clearVocabularies();
     };
 
     $("#button_add_new").click(function(){
+        clearRecap();
+        // save today_study
         var today_study = $("#input_today_study").val().trim();
         console.log('today study: ', today_study)
         StudyAPI.saveStudy(today_study)
@@ -62,19 +64,34 @@ $(document).ready(function() {
             // set vocabularies
             console.log('history data: ', data);
             var v = JSON.parse(data);  // v now includes today's study
-            setVocabularies(v);
+            StudyStrategy.setVocabularies(v);
+            setVocabularies(StudyStrategy);
         });
     });
 
     $("#button_load_history").click(function() {
+        clearRecap();
         getStudyHistory()
         .done(function(data, textStatus, jqXHR) {
             console.log('history data: ', data);
             var v = JSON.parse(data);
-            setVocabularies(v);
+            StudyStrategy.setVocabularies(v);
+            setVocabularies(StudyStrategy);
         });
     });
 
+    $("#button_add_to_recap_list").click(function() {
+        console.log('recap: ', Flashcard.getLastWord());
+        RecapStrategy.add(Flashcard.getLastWord());
+    });
+
+    $("#button_recap").click(function() {
+        setVocabularies(RecapStrategy);
+    });
+
+    // initialise
+    // bind Flashcard
+    Flashcard.init($("#flashcard"));
     // auto load history
     $("#button_load_history").click();
-}); 
+});

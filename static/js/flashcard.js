@@ -1,9 +1,9 @@
 // flashcard_div = $("#flashcard")
 var Flashcard = (function(){
     var $flashcardDiv;
-    var strategy_;
     var lastWord_;  // lastWord_ "0x34560x3321
     var hanCharacterDivClickCallback_;
+    var hanCharacterDivs_ = [];
 
     var logState = function() {
         console.log("last word: ", lastWord_);
@@ -11,16 +11,11 @@ var Flashcard = (function(){
 
     /**
      * flashcardDiv = $("#flashcard")
-     * strategy = GradingTest
      */
-    var init = function(flashcardDiv, strategy, hanCharacterDivClickCallback){
+    var init = function(flashcardDiv, hanCharacterDivClickCallback){
         $flashcardDiv = flashcardDiv;
-        strategy_ = strategy;
+        hanCharacterDivs_ = [];
         hanCharacterDivClickCallback_ = hanCharacterDivClickCallback;
-        strategy_.init()
-        .done(function() {
-            displayVocabulary(strategy_.getNextVocabulary());
-        });
     };
 
     /**
@@ -35,6 +30,7 @@ var Flashcard = (function(){
         if (hanCharacterDivClickCallback_) {
             hanCharacterDiv.click(hanCharacterDivClickCallback_);
         }
+        hanCharacterDivs_.push(hanCharacterDiv);
         return hanCharacterDiv;
     };
 
@@ -50,6 +46,13 @@ var Flashcard = (function(){
         });
     };
 
+    var setHanCharacterDivClickCallback = function(hanCharacterDivClickCallback) {
+        hanCharacterDivClickCallback_ = hanCharacterDivClickCallback;
+        hanCharacterDivs_.forEach(function(element) {
+            element.click(hanCharacterDivClickCallback_);
+        });
+    };
+
     /**
      * @return "0x23120x2233"
      */
@@ -61,6 +64,7 @@ var Flashcard = (function(){
     return {
         init: init,
         displayVocabulary: displayVocabulary,
-        getLastWord: getLastWord
+        getLastWord: getLastWord,
+        setHanCharacterDivClickCallback: setHanCharacterDivClickCallback
     };
 }) ();

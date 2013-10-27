@@ -5,6 +5,63 @@ function shuffle(o){ //v1.0
     return o;
 };
 
+/*
+ * Vocabulary list class
+ */
+function VocabularyList() {
+    this.vocabularies_ = [];
+    this.index_ = 0;
+};
+
+/**
+ * @return "0x12340x3456"
+ */
+VocabularyList.prototype.getNext = function () {
+    var v = "";
+    if (this.vocabularies_.length > 0) {
+        var v = this.vocabularies_[this.index_];
+        this.index_ += 1;
+        if (this.index_ >= this.vocabularies_.length) {
+            this.index_ = 0;
+        }    
+    }
+    return v;
+};
+
+/**
+ * @param vocabularies ["u0x1234u0x3456", "u0x3456"]
+ */
+VocabularyList.prototype.set = function(vocabularies) {
+    this.vocabularies_ = [];
+    for (var i = 0; i < vocabularies.length; ++i) {
+        if (vocabularies[i]) {
+            this.vocabularies_.push(vocabularies[i]);
+        }
+    }
+    this.vocabularies_ = shuffle(this.vocabularies_);
+    this.index_ = 0;
+};
+
+VocabularyList.prototype.clear = function() {
+    this.vocabularies_ = [];
+    this.index_ = 0;
+}
+
+/**
+ * @return ["u0x1234u0x3456", "u0x3456"]
+ */
+VocabularyList.prototype.getAll = function() {
+    return this.vocabularies_;
+}
+
+/**
+ * @param vocabulary "u0x3456u0x1122"
+*/
+VocabularyList.prototype.add = function(vocabulary) {
+    this.vocabularies_.push(vocabulary);
+};
+
+
 var GradingTestStrategy = (function() {
     var vocabularies_ = [];
     var index_;
@@ -114,3 +171,16 @@ var StudyStrategy = (function() {
     };
 })();
 
+
+var RecapStrategy = (function() {
+    var vocabularyList_ = new VocabularyList();
+
+    return {
+        init: function() {},
+        setVocabularies: vocabularyList_.set,
+        clearVocabularies: vocabularyList_.clear,
+        getNextVocabulary: vocabularyList_.getNext,
+        getAllVocabularies: vocabularyList_.getAll,
+        add: vocabularyList_.add,
+    };
+})();
