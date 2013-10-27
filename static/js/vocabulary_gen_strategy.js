@@ -102,69 +102,16 @@ var GradingTestStrategy = (function() {
 })();
 
 var StudyStrategy = (function() {
-    var vocabularies_ = [];
-    var index_;
-
-    /**
-     * do nothing
-     */
-    var init = function() {
-        var deferred_obj = $.Deferred();
-        deferred_obj.resolve();
-        return deferred_obj.promise();
-    };
-
-    /**
-     * @param vocabularies ["u0x1234u0x3456", "u0x3456"]
-     */
-    var setVocabularies = function(vocabularies) {
-        vocabularies_ = [];
-        for (var i = 0; i < vocabularies.length; ++i) {
-            if (vocabularies[i]) {
-                vocabularies_.push(vocabularies[i]);
-            }
-        }
-        vocabularies_ = shuffle(vocabularies_);
-        index_ = 0;
-    };
-
-    var clearVocabularies = function() {
-        vocabularies_ = [];
-        index_ = 0;
-    }
-
-    /*
-     * @return "0x12240x2343"
-     */
-    var getNextVocabulary = function() {
-        var v = "";
-        if (vocabularies_.length > 0) {
-            var v = vocabularies_[index_];
-            index_ += 1;
-            if (index_ >= vocabularies_.length) {
-                vocabularies_ = shuffle(vocabularies_);
-                index_ = 0;
-            }    
-        }
-        return v;
-    };
-
-    /**
-     * @return ["u0x1234u0x3456", "u0x3456"]
-     */
-    var getAllVocabularies = function() {
-        return vocabularies_;
-    }
+    var vocabularyList_ = new VocabularyList();
 
     return {
-        init: init,
-        setVocabularies: setVocabularies,
-        clearVocabularies: clearVocabularies,
-        getNextVocabulary: getNextVocabulary,
-        getAllVocabularies: getAllVocabularies
+        setVocabularies: vocabularyList_.set,
+        clearVocabularies: vocabularyList_.clear,
+        getNextVocabulary: vocabularyList_.getNext,
+        getAllVocabularies: vocabularyList_.getAll,
+        add: vocabularyList_.add,
     };
 })();
-
 
 var RecapStrategy = (function() {
     var vocabularyList_ = new VocabularyList();
