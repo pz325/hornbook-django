@@ -58,7 +58,10 @@ VocabularyList.prototype.getAll = function() {
  * @param vocabulary "u0x3456u0x1122"
 */
 VocabularyList.prototype.add = function(vocabulary) {
-    this.vocabularies_.push(vocabulary);
+    if ($.inArray(vocabulary, this.vocabularies_) === -1)
+    {
+        this.vocabularies_.push(vocabulary);
+    }
 };
 
 VocabularyList.prototype.isEmpty = function() {
