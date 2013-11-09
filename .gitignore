@@ -46,3 +46,6 @@ autoload
 mediagenerator
 filetransfers
 mapreduce
+
+# sublime text 2 project setting
+*.sublime-workspace

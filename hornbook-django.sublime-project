@@ -1,0 +1,19 @@
+{
+	"folders":
+	[
+		{
+			"path": "/D/projects/hornbook-django",
+            "file_exclude_patterns":[
+                ".pyc",
+                ".ico"
+            ],
+            "folder_exclude_patterns": [
+                ".gaedata"
+            ]
+		}
+	],
+    "settings":
+    {
+        "tab_size": 4
+    }
+}
