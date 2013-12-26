@@ -126,7 +126,12 @@ $(document).ready(function() {
     });
 
     $("#button_recap").click(function() {
-        setVocabularies(RecapStrategy);
+        var vocabularies = RecapStrategy.getAllVocabularies().join(' ');
+        console.log(vocabularies);
+        StudyAPI.saveStudy(vocabularies)
+        .done(function() { 
+            setVocabularies(RecapStrategy);
+        });
     });
 
     // initialise

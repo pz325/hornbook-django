@@ -38,9 +38,6 @@ def save_study(request):
         return HttpResponse('nothing saved')
     today = datetime.date.today()
     # update today's study history
-    tomorrow = today + datetime.timedelta(days=1)
-    StudyHistory.objects.filter(user=request.user, 
-        study_date__range=(today, tomorrow)).delete()
     for v in vocabularies:
         if v == '':
             continue
