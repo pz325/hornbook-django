@@ -101,12 +101,11 @@ def get_study_intelligent(request):
         study_date__range=(one_week_before, most_recent_study_date-datetime.timedelta(days=1)))]
     random.shuffle(one_week)
 
-    one_month_before = one_week_before - datetime.timedelta(days=30)
-    one_month = [h.vocabulary for h in StudyHistory.objects.filter(
+    before = [h.vocabulary for h in StudyHistory.objects.filter(
         user=request.user,
-        study_date__range=(one_month_before, one_week_before-datetime.timedelta(days=1)))]
-    random.shuffle(one_month)
+        study_date__lt=one_week_before)]
+    random.shuffle(before)
 
-    ret = most_recent + one_week[:10] + one_month[:10]
+    ret = most_recent + one_week[:10] + before[:10]
 
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
