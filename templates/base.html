@@ -11,6 +11,7 @@
     
     <script src="http://code.jquery.com/jquery-1.8.2.min.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="http://malsup.github.io/jquery.blockUI.js"></script>
     {% block preload_js %}
     {% endblock %}
 
@@ -74,6 +75,22 @@
     <div id="footer">
       
     </div>
+
+    <script >
+      $(document)
+      .ajaxStart($.blockUI({
+        css: { 
+          border: 'none', 
+          padding: '15px', 
+          backgroundColor: '#000', 
+          '-webkit-border-radius': '10px', 
+          '-moz-border-radius': '10px', 
+          opacity: .5, 
+          color: '#fff' 
+        } 
+      }))
+      .ajaxStop($.unblockUI);
+    </script>
 
     {% block js %}
     {% endblock %}
