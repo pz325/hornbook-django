@@ -16,24 +16,62 @@ $(document).ready(function() {
      */
     var getStudyHistory = function() {
         var deferred_obj = $.Deferred();
-        var range = $('#select_previous_study option:selected').val();
-        console.log('range:', range);
+        var history = $('#select_previous_study option:selected').val();
+        console.log("history: ", history);
+
+        if (history === "intelligent") {
+            getStudyHistoryIntelligent()
+            .then(function(data, textStatus, jqXHR) {
+                deferred_obj.resolve(data, textStatus, jqXHR);
+                return deferred_obj.promise();
+            });
+        }
+        if (history === "last_week" || history === "last_month") {
+            getStudyHistoryBetween(history)
+            .then(function(data, textStatus, jqXHR) {
+                deferred_obj.resolve(data, textStatus, jqXHR);
+            });
+        }
+
+        return deferred_obj.promise();
+    };
+
+    /*
+     * deferred
+     */
+    var getStudyHistoryIntelligent = function() {
+        var deferred_obj = $.Deferred();
+
+        StudyAPI.getStudyIntelligent()
+        .then(function(data, textStatus, jqXHR) {
+            deferred_obj.resolve(data, textStatus, jqXHR);
+        });
+
+        return deferred_obj.promise();
+    };
+
+    /*
+     * deferred
+     */
+    var getStudyHistoryBetween = function(history) {
+        var deferred_obj = $.Deferred();
 
         var today = new Date();
         var end_date = $.datepicker.formatDate('mm/dd/yy', new Date());
         var start_date = null;
-        if (range === "last_week") {
+        if (history === "last_week") {
             start_date = $.datepicker.formatDate('mm/dd/yy', getLastWeek());
         }
-        if (range === "last_month") {
+        if (history === "last_month") {
             start_date = $.datepicker.formatDate('mm/dd/yy', getLastMonth());
         }
-        //console.log('end_date (today):', end_date);
-        //console.log('start_date: ', start_date);
+        console.log('end_date (today):', end_date);
+        console.log('start_date: ', start_date);
         StudyAPI.getStudyBetween(start_date, end_date)
         .then(function(data, textStatus, jqXHR) {
             deferred_obj.resolve(data, textStatus, jqXHR);
             });                
+    
         return deferred_obj.promise();
     };
 

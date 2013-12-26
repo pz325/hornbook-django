@@ -1,6 +1,7 @@
 var API_SAVE_STUDY_URL = "/study/save_study/";   // POST url with '/'' at the end
 var API_GET_STUDY_BWTEEN_URL = "/study/get_study_between";
 var API_GET_ALL_URL = "/study/get_all";
+var API_GET_STUDY_INTELLIGENT_URL = "/study/get_study_intelligent";
 
 /**
  * wrapper of study api
@@ -22,6 +23,13 @@ var StudyAPI = (function() {
                 start_date: start_date,
                 end_date: end_date
             }
+        });
+    };
+
+    var getStudyIntelligent = function() {
+        return $.ajax({
+            type: "GET",
+            url: API_GET_STUDY_INTELLIGENT_URL
         });
     };
 
@@ -48,6 +56,8 @@ var StudyAPI = (function() {
     return {
         getStudyBetween: getStudyBetween,
         saveStudy: saveStudy,
-        getAll: getAll
+        getAll: getAll,
+        getStudyIntelligent: getStudyIntelligent
     };
+
 })();

@@ -8,6 +8,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from models import StudyHistory
 import datetime
 import json
+import random
 
 @login_required
 def index(request):
@@ -77,4 +78,35 @@ def get_all(request):
     Return [u0x2345, u0x1111, ...]
     '''
     ret = [h.vocabulary for h in StudyHistory.objects.all()]
+    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
+@login_required
+def get_study_intelligent(request):
+    '''
+    HTTP GET /study/get_study_intelligent
+    return study history intelligently:
+     * return all most recently studied, which then includes recapped
+     * return random 10 within one week before the most recent study date
+     * return random 10 within one month before the most recent study date 
+    Return [u0x2345, u0x1111, ...]
+    '''
+    most_recent_study_date = StudyHistory.objects.filter(user=request.user).order_by("-study_date")[0].study_date
+    most_recent = [h.vocabulary for h in StudyHistory.objects.filter(
+        user=request.user,
+        study_date__range=(most_recent_study_date-datetime.timedelta(days=1), most_recent_study_date))]
+    
+    one_week_before = most_recent_study_date - datetime.timedelta(days=7)
+    one_week = [h.vocabulary for h in StudyHistory.objects.filter(
+        user=request.user, 
+        study_date__range=(one_week_before, most_recent_study_date-datetime.timedelta(days=1)))]
+    random.shuffle(one_week)
+
+    one_month_before = one_week_before - datetime.timedelta(days=30)
+    one_month = [h.vocabulary for h in StudyHistory.objects.filter(
+        user=request.user,
+        study_date__range=(one_month_before, one_week_before-datetime.timedelta(days=1)))]
+    random.shuffle(one_month)
+
+    ret = most_recent + one_week[:10] + one_month[:10]
+
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
