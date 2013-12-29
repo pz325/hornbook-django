@@ -36,7 +36,7 @@ def save_study(request):
     vocabularies = request.POST['vocabularies'].split(' ')
     if vocabularies == '':
         return HttpResponse('nothing saved')
-    today = datetime.date.today()
+    today = datetime.datetime.now()
     # update today's study history
     for v in vocabularies:
         if v == '':
@@ -88,14 +88,19 @@ def get_study_intelligent(request):
     Return [u0x2345, u0x1111, ...]
     '''
     most_recent_study_date = StudyHistory.objects.filter(user=request.user).order_by("-study_date")[0].study_date
+    one_day_before = most_recent_study_date - datetime.timedelta(days=1)
     most_recent = [h.vocabulary for h in StudyHistory.objects.filter(
         user=request.user,
-        study_date__range=(most_recent_study_date-datetime.timedelta(days=1), most_recent_study_date))]
-    
+        study_date__range=(
+            one_day_before+datetime.timedelta(seconds=1), 
+            most_recent_study_date))]
+
     one_week_before = most_recent_study_date - datetime.timedelta(days=7)
     one_week = [h.vocabulary for h in StudyHistory.objects.filter(
-        user=request.user, 
-        study_date__range=(one_week_before, most_recent_study_date-datetime.timedelta(days=1)))]
+        user=request.user,
+        study_date__range=(
+            one_week_before+datetime.timedelta(seconds=1), 
+            one_day_before))]
     random.shuffle(one_week)
 
     before = [h.vocabulary for h in StudyHistory.objects.filter(
@@ -103,6 +108,6 @@ def get_study_intelligent(request):
         study_date__lt=one_week_before)]
     random.shuffle(before)
 
-    ret = most_recent + one_week[:10] + before[:10]
+    ret = most_recent + one_week[:10] + before[:15]
 
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
