@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     function getLastWeek() {
         var today = new Date();
         var lastWeek = new Date(today.getTime()-1000*60*60*24*7);
@@ -12,50 +13,35 @@ $(document).ready(function() {
     }
 
     /**
-     * deferred
+     * call getStudyHistoryIntelligent() or getStudyHistoryBetween()
+     * @return $.ajax() deferred object
      */
     var getStudyHistory = function() {
-        var deferred_obj = $.Deferred();
         var history = $('#select_previous_study option:selected').val();
         console.log("history: ", history);
 
         if (history === "intelligent") {
-            getStudyHistoryIntelligent()
-            .then(function(data, textStatus, jqXHR) {
-                deferred_obj.resolve(data, textStatus, jqXHR);
-                return deferred_obj.promise();
-            });
-        }
-        if (history === "last_week" || history === "last_month") {
-            getStudyHistoryBetween(history)
-            .then(function(data, textStatus, jqXHR) {
-                deferred_obj.resolve(data, textStatus, jqXHR);
-            });
+            return getStudyHistoryIntelligent();
         }
 
-        return deferred_obj.promise();
+        if (history === "last_week" || history === "last_month") {
+            return getStudyHistoryBetween(history);
+        }
     };
 
     /*
-     * deferred
+     * call StudyAPI.getStudyIntelligent()
+     * @return $.ajax() deferred object
      */
     var getStudyHistoryIntelligent = function() {
-        var deferred_obj = $.Deferred();
-
-        StudyAPI.getStudyIntelligent()
-        .then(function(data, textStatus, jqXHR) {
-            deferred_obj.resolve(data, textStatus, jqXHR);
-        });
-
-        return deferred_obj.promise();
+        return StudyAPI.getStudyIntelligent();
     };
 
     /*
-     * deferred
+     * call StudyAPI.getStudyBetween()
+     * @return $.ajax() deferred object
      */
     var getStudyHistoryBetween = function(history) {
-        var deferred_obj = $.Deferred();
-
         var today = new Date();
         var end_date = $.datepicker.formatDate('mm/dd/yy', new Date());
         var start_date = null;
@@ -67,12 +53,7 @@ $(document).ready(function() {
         }
         console.log('end_date (today):', end_date);
         console.log('start_date: ', start_date);
-        StudyAPI.getStudyBetween(start_date, end_date)
-        .then(function(data, textStatus, jqXHR) {
-            deferred_obj.resolve(data, textStatus, jqXHR);
-            });                
-    
-        return deferred_obj.promise();
+        return StudyAPI.getStudyBetween(start_date, end_date);
     };
 
     var setVocabularies = function(strategy) {
@@ -100,11 +81,15 @@ $(document).ready(function() {
         StudyAPI.saveStudy(today_study)
         .pipe(getStudyHistory)
         .done(function(data, textStatus, jqXHR) {
+            Util.notifySuccess("Study history loaded");
             // set vocabularies
             console.log('history data: ', data);
             var v = JSON.parse(data);  // v now includes today's study
             StudyStrategy.setVocabularies(v);
             setVocabularies(StudyStrategy);
+        })
+        .fail(function(data, textStatus, jqXHR) {
+            Util.notifyError("Failed loading the study history");
         });
     });
 
@@ -112,10 +97,14 @@ $(document).ready(function() {
         clearRecap();
         getStudyHistory()
         .done(function(data, textStatus, jqXHR) {
+            Util.notifySuccess("Study history loaded");
             console.log('history data: ', data);
             var v = JSON.parse(data);
             StudyStrategy.setVocabularies(v);
             setVocabularies(StudyStrategy);
+        })
+        .fail(function(data, textStatus, jqXHR) {
+            Util.notifyError("Failed loading the study history");
         });
     });
 
@@ -129,8 +118,12 @@ $(document).ready(function() {
         var vocabularies = RecapStrategy.getAllVocabularies().join(' ');
         console.log(vocabularies);
         StudyAPI.saveStudy(vocabularies)
-        .done(function() { 
+        .done(function(data, textStatus, jqXHR) {
+            Util.notifySuccess("Recap word saved");
             setVocabularies(RecapStrategy);
+        })
+        .fail(function(data, textStatus, jqXHR) {
+            Util.notifyError("Failed saving the recap words");
         });
     });
 

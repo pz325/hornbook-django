@@ -12,6 +12,7 @@ var StudyAPI = (function() {
     /**
      * @param start_date "10/02/2013"
      * @param end_date "10/03/2013"
+     * @return $.ajax
      */
     var getStudyBetween = function(start_date, end_date) {
         console.log('start_date: ', start_date);
