@@ -40,9 +40,14 @@ var Flashcard = (function(){
     var displayVocabulary = function(vocabulary) {
         lastWord_ = vocabulary;
         logState();
-        $flashcardDiv.empty();
-        lastWord_.split("").forEach(function(element) {
-            $flashcardDiv.append(genHanCharacterDiv(element));
+
+        $flashcardDiv.fadeOut('slow', function() {
+            $flashcardDiv.empty();
+            lastWord_.split("").forEach(function(element) {
+                genHanCharacterDiv(element)
+                .appendTo($flashcardDiv)
+            });
+            $flashcardDiv.fadeIn('fast');
         });
     };
 
