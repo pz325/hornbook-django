@@ -46,6 +46,11 @@
     font-size: 15em;
     font-family: "DFKai-SB", "BiauKai", "STKaiti";
     color: #444444;
+    margin-right: 10px;
+    border-radius: 10px;
+    -webkit-box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+    box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
+    background-color: #C7EDDD
 }
 
 html, body { height : 100%; }
