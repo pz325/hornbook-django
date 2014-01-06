@@ -5,6 +5,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.exceptions import ObjectDoesNotExist
+
 from models import StudyHistory
 import datetime
 import json
@@ -21,37 +23,67 @@ def api_index(request):
         context_instance=RequestContext(request))
 
 @login_required
-def save_study(request):
+def new_study(request):
     '''
-    HTTP POST /study/save_study
-    Data 
+    HTTP POST /study/new_study
+    Data
         vocabularies e.g. "u0x2345 u0x1111 u0x1111u0x1234"
     Return
-        {
-            user: "xinrong",
-            vocabularies: "u0x2345u0x1111",
-            study_date = "2013-10-02"
-        }
+        [<StudyHistory object>, <StudyHistory object>]
     '''
     vocabularies = request.POST['vocabularies'].split(' ')
+    study_date = datetime.datetime.now()
+    ret = []
     if vocabularies == '':
-        return HttpResponse('nothing saved')
-    today = datetime.datetime.now()
-    # update today's study history
+        return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+    # add new StudyHistory
     for v in vocabularies:
         if v == '':
             continue
-        learned = StudyHistory.objects.filter(vocabulary=v)
-        if learned:
-            learned.update(study_date=today)
-        else:
-            h = StudyHistory(user=request.user, vocabulary=v, study_date=today)
-            h.save()
+        try:
+            study_history = StudyHistory.objects.get(user=request.user, vocabulary=v)
+            study_history.study_date = study_date
+            study_history.studied_times += 1
+            study_history.revise_date = study_date
+            study_history.history_type = 'N'
+            study_history.save()
+        except ObjectDoesNotExist:
+            study_history = StudyHistory(user=request.user, vocabulary=v, study_date=study_date, revise_date=study_date, history_type='N', studied_times=0)
+            study_history.save()
+        
+        ret.append(study_history)
 
-    ret = dict(user=request.user.username,
-        vocabularies=vocabularies,
-        study_date=today)
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
+@login_required
+def revise_study(request):
+    '''
+    HTTP POST /study/revise_study
+    Data
+        vocabularies e.g. "u0x2345 u0x1111 u0x1111u0x1234"
+    Return
+        [<StudyHistory object>, <StudyHistory object>]
+    '''
+    vocabularies = request.POST['vocabularies'].split(' ')
+    revise_date = datetime.datetime.now()
+    ret = []
+    if vocabularies == '':
+        return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+    # update StudyHistory
+    for v in vocabularies:
+        if v == '':
+            continue
+        try:
+            study_history = StudyHistory.objects.get(user=request.user, vocabulary=v)
+            study_history.revise_date = revise_date
+            study_history.history_type = get_history_type(study_history.study_date, study_history.revise_date)
+            study_history.save()
+            ret.append(study_history)
+        except ObjectDoesNotExist:
+            continue
+
+    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
 
 @login_required
 def get_study_between(request):
@@ -68,6 +100,7 @@ def get_study_between(request):
     ret = [h.vocabulary for h in q]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
+
 @login_required
 def get_all(request):
     '''
@@ -77,37 +110,28 @@ def get_all(request):
     ret = [h.vocabulary for h in StudyHistory.objects.all()]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
+
 @login_required
 def get_study_intelligent(request):
     '''
     HTTP GET /study/get_study_intelligent
     return study history intelligently:
-     * return all most recently studied, which then includes recapped
-     * return random 10 within one week before the most recent study date
-     * return random 10 within one month before the most recent study date 
+     * return all New
+     * return all Studying
+     * return random 10 Grasped
     Return [u0x2345, u0x1111, ...]
     '''
-    most_recent_study_date = StudyHistory.objects.filter(user=request.user).order_by("-study_date")[0].study_date
-    one_day_before = most_recent_study_date - datetime.timedelta(days=1)
-    most_recent = [h.vocabulary for h in StudyHistory.objects.filter(
-        user=request.user,
-        study_date__range=(
-            one_day_before+datetime.timedelta(seconds=1), 
-            most_recent_study_date))]
+    new_v = [h.vocabulary for h in StudyHistory.objects.filter(user=request.user, history_type='N')]
+    studying_v = [h.vocabulary for h in StudyHistory.objects.filter(user=request.user, history_type='S')]
+    grasped_v = [h.vocabulary for h in StudyHistory.objects.filter(user=request.user, history_type='G')]
+    random.shuffle(grasped_v)
 
-    one_week_before = most_recent_study_date - datetime.timedelta(days=7)
-    one_week = [h.vocabulary for h in StudyHistory.objects.filter(
-        user=request.user,
-        study_date__range=(
-            one_week_before+datetime.timedelta(seconds=1), 
-            one_day_before))]
-    random.shuffle(one_week)
-
-    before = [h.vocabulary for h in StudyHistory.objects.filter(
-        user=request.user,
-        study_date__lt=one_week_before)]
-    random.shuffle(before)
-
-    ret = most_recent + one_week[:10] + before[:15]
+    ret = new_v + studying_v + grasped_v[:10];
 
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
+
+def get_history_type(study_date, revise_date):
+    '''
+    '''
+    return 'N'

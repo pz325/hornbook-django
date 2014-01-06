@@ -43,13 +43,13 @@ $(document).ready(function() {
      */
     var getStudyHistoryBetween = function(history) {
         var today = new Date();
-        var end_date = $.datepicker.formatDate('mm/dd/yy', new Date());
+        var end_date = new Date();
         var start_date = null;
         if (history === "last_week") {
-            start_date = $.datepicker.formatDate('mm/dd/yy', getLastWeek());
+            start_date = getLastWeek();
         }
         if (history === "last_month") {
-            start_date = $.datepicker.formatDate('mm/dd/yy', getLastMonth());
+            start_date = getLastMonth();
         }
         console.log('end_date (today):', end_date);
         console.log('start_date: ', start_date);
@@ -131,5 +131,5 @@ $(document).ready(function() {
     // bind Flashcard
     Flashcard.init($("#flashcard"));
     // auto load history
-    $("#button_load_history").click();
+    //$("#button_load_history").click();
 });

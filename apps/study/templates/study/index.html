@@ -12,15 +12,15 @@
         <div class="controllers">
             New words:<input type="text" id="input_today_study">
             <button id="button_add_new">Add New</button>
+            <span class="settings">
+                History: <select id="select_previous_study">
+                    <option value="intelligent">Intelligent</option>
+                    <option value="last_week">Last Week</option>
+                    <option value="last_month">Last Month</option>
+                </select>
+            </span>
             <button id="button_load_history">Load History</button>
             <button id="button_recap">Recap</button>
-        </div>
-        <div class="settings">
-            History: <select id="select_previous_study">
-                <option value="intelligent">Intelligent</option>
-                <option value="last_week">Last Week</option>
-                <option value="last_month">Last Month</option>
-            </select>
         </div>
     </div>
     <div id="all_study">
@@ -28,7 +28,7 @@
     <div id= "flashcard", class="flashcard">
     </div>
     <div id="recap">
-        <button id="button_add_to_recap_list">Recap</button>
+        <button id="button_add_to_recap_list">Add to Recap</button>
         <div id="recap_list"></div>
     </div>
     </div>
