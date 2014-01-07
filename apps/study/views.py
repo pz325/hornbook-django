@@ -51,7 +51,7 @@ def new_study(request):
             study_history = StudyHistory(user=request.user, vocabulary=v, study_date=study_date, revise_date=study_date, history_type='N', studied_times=0)
             study_history.save()
         
-        ret.append(study_history)
+        ret.append(study_history.getJSONObject())
 
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
@@ -78,7 +78,7 @@ def revise_study(request):
             study_history.revise_date = revise_date
             study_history.history_type = get_history_type(study_history.study_date, study_history.revise_date)
             study_history.save()
-            ret.append(study_history)
+            ret.append(study_history.getJSONObject())
         except ObjectDoesNotExist:
             continue
 
@@ -133,5 +133,18 @@ def get_study_intelligent(request):
 
 def get_history_type(study_date, revise_date):
     '''
+    @return
+        'N' study_date == revise_date
+        'S' study_date < revise_date < study_date + 4
+        'G' revise_date >= study_date + 4
     '''
+    s = study_date.date()
+    r = revise_date.date()
+    delta = r - s
+    if delta.days == 0:
+        return 'N'
+    if delta.days > 0 and delta.days < 4:
+        return 'S'
+    if delta.days >= 4:
+        return 'G' 
     return 'N'

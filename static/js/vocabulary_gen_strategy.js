@@ -10,7 +10,7 @@ function shuffle(o){ //v1.0
  */
 function VocabularyList() {
     this.vocabularies_ = [];
-    this.index_ = 0;
+    this.index_ = -1;
 };
 
 /**
@@ -19,11 +19,20 @@ function VocabularyList() {
 VocabularyList.prototype.getNext = function () {
     var v = "";
     if (this.vocabularies_.length > 0) {
-        var v = this.vocabularies_[this.index_];
         this.index_ += 1;
         if (this.index_ >= this.vocabularies_.length) {
+            this.vocabularies_ = shuffle(this.vocabularies_);
             this.index_ = 0;
-        }    
+        }
+        v = this.vocabularies_[this.index_];
+    }
+    return v;
+};
+
+VocabularyList.prototype.get = function() {
+    var v = "";
+    if (this.vocabularies_.length > 0) {
+        v = this.vocabularies_[this.index_];
     }
     return v;
 };
@@ -44,7 +53,7 @@ VocabularyList.prototype.set = function(vocabularies) {
 
 VocabularyList.prototype.clear = function() {
     this.vocabularies_ = [];
-    this.index_ = 0;
+    this.index_ = -1;
 }
 
 /**
@@ -65,11 +74,18 @@ VocabularyList.prototype.add = function(vocabulary) {
 };
 
 VocabularyList.prototype.isEmpty = function() {
-    if (this.vocabularies_.length === 0) {
-        return true;
-    }
-    else {
-        return false;
+    return this.vocabularies_.length === 0;
+}
+
+/*
+ * remove (current) vocabulary from list
+ */
+VocabularyList.prototype.remove = function() {
+    if (this.index_ != -1) {
+        this.vocabularies_.splice(this.index_, 1);
+        if (this.index_ >= this.vocabularies_.length) {
+            this.index_ = this.vocabularies_.length - 1;
+        }
     }
 }
 
