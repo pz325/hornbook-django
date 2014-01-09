@@ -13,7 +13,7 @@ STUDY_HISTORY_TYPE = (
 class StudyHistory(models.Model):
     user = models.ForeignKey(User, editable=False)
     vocabulary = models.CharField(max_length=200)
-    study_date = models.DateTimeField(auto_now=True)
+    study_date = models.DateTimeField(null=True)
     revise_date = models.DateTimeField(null=True)
     history_type = models.CharField(null=True, max_length=1, choices=STUDY_HISTORY_TYPE)
     studied_times = models.PositiveSmallIntegerField(default=0)
