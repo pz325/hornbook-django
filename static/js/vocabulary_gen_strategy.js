@@ -11,6 +11,7 @@ function shuffle(o){ //v1.0
 function VocabularyList() {
     this.vocabularies_ = [];
     this.index_ = -1;
+    this.shuffleList_ = true;
 };
 
 /**
@@ -21,7 +22,9 @@ VocabularyList.prototype.getNext = function () {
     if (this.vocabularies_.length > 0) {
         this.index_ += 1;
         if (this.index_ >= this.vocabularies_.length) {
-            this.vocabularies_ = shuffle(this.vocabularies_);
+            if (this.shuffleList_) {
+                this.vocabularies_ = shuffle(this.vocabularies_);
+            }
             this.index_ = 0;
         }
         v = this.vocabularies_[this.index_];
@@ -39,15 +42,21 @@ VocabularyList.prototype.get = function() {
 
 /**
  * @param vocabularies ["u0x1234u0x3456", "u0x3456"]
+ * @param shuffleList (if not set, true)
  */
-VocabularyList.prototype.set = function(vocabularies) {
+VocabularyList.prototype.set = function(vocabularies, shuffleList) {
+    shuffleList = typeof shuffleList !== 'undefined' ? shuffleList : true;
+    this.shuffleList_ = shuffleList;
+
     this.vocabularies_ = [];
     for (var i = 0; i < vocabularies.length; ++i) {
         if (vocabularies[i]) {
             this.vocabularies_.push(vocabularies[i]);
         }
     }
-    this.vocabularies_ = shuffle(this.vocabularies_);
+    if (this.shuffleList_) {
+        this.vocabularies_ = shuffle(this.vocabularies_);
+    }
     this.index_ = 0;
 };
 

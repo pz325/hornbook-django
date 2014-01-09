@@ -55,6 +55,37 @@ def new_study(request):
 
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
+
+@login_required
+def add_grasped(request):
+    '''
+    HTTP POST /study/add_grasped
+    Data
+        vocabularies e.g. "u0x2345 u0x1111 u0x1111u0x1234"
+    Return
+        [<StudyHistory object>, <StudyHistory object>]
+    '''
+    vocabularies = request.POST['vocabularies'].split(' ')
+    ret = []
+    if vocabularies == '':
+        return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+    study_date = datetime.datetime.now()
+    revise_date = datetime.datetime.now() + datetime.timedelta(days=5);
+    # add new StudyHistory
+    for v in vocabularies:
+        if v == '':
+            continue
+        try:
+            study_history = StudyHistory.objects.get(user=request.user, vocabulary=v)
+        except ObjectDoesNotExist:
+            study_history = StudyHistory(user=request.user, vocabulary=v, study_date=study_date, revise_date=revise_date, history_type='G', studied_times=1)
+            study_history.save()
+        
+        ret.append(study_history.getJSONObject())
+
+    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
+
 @login_required
 def revise_study(request):
     '''

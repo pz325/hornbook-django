@@ -1,5 +1,6 @@
 var API_NEW_STUDY_URL = "/study/new_study/";   // POST url with '/'' at the end
 var API_REVISE_STUDY_URL = "/study/revise_study/";   // POST url with '/'' at the end
+var API_ADD_GRASPED_URL = "/study/add_grasped/";
 var API_GET_STUDY_BWTEEN_URL = "/study/get_study_between";
 var API_GET_ALL_URL = "/study/get_all";
 var API_GET_STUDY_INTELLIGENT_URL = "/study/get_study_intelligent";
@@ -36,6 +37,21 @@ var StudyAPI = (function() {
         return $.ajax({
             type: "GET",
             url: API_GET_STUDY_INTELLIGENT_URL
+        });
+    };
+
+    /*
+     * 
+     * @param vocabularies "ux1111 u0x2222u"
+     * @return $.ajax()
+     */
+    var addGrasped = function(vocabularies) {
+        return $.ajax({
+            type: "POST",
+            url: API_ADD_GRASPED_URL,
+            data: {
+                vocabularies: vocabularies
+            }
         });
     };
 
@@ -82,7 +98,8 @@ var StudyAPI = (function() {
         newStudy: newStudy,
         reviseStudy: reviseStudy,
         getAll: getAll,
-        getStudyIntelligent: getStudyIntelligent
+        getStudyIntelligent: getStudyIntelligent,
+        addGrasped: addGrasped
     };
 
 })();
