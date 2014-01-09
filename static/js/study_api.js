@@ -4,6 +4,7 @@ var API_ADD_GRASPED_URL = "/study/add_grasped/";
 var API_GET_STUDY_BWTEEN_URL = "/study/get_study_between";
 var API_GET_ALL_URL = "/study/get_all";
 var API_GET_STUDY_INTELLIGENT_URL = "/study/get_study_intelligent";
+var API_GET_STATISTICS_URL = "/study/get_statistics";
 
 /**
  * wrapper of study api
@@ -93,13 +94,24 @@ var StudyAPI = (function() {
         });
     };
 
+    /*
+     * @return $.ajax()
+     */
+    var getStatistics = function() {
+        return $.ajax({
+            type: "GET",
+            url: API_GET_STATISTICS_URL
+        });
+    };
+
     return {
         getStudyBetween: getStudyBetween,
         newStudy: newStudy,
         reviseStudy: reviseStudy,
         getAll: getAll,
         getStudyIntelligent: getStudyIntelligent,
-        addGrasped: addGrasped
+        addGrasped: addGrasped,
+        getStatistics: getStatistics
     };
 
 })();

@@ -162,6 +162,26 @@ def get_study_intelligent(request):
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 
+@login_required
+def get_statistics(request):
+    '''
+    HTTP GET /study/get_statistics
+    Return
+        {
+            num_new: 3,
+            num_studying: 4,
+            num_grasped: 5
+        }
+    '''
+    new_v = [h.vocabulary for h in StudyHistory.objects.filter(user=request.user, history_type='N')]
+    studying_v = [h.vocabulary for h in StudyHistory.objects.filter(user=request.user, history_type='S')]
+    grasped_v = [h.vocabulary for h in StudyHistory.objects.filter(user=request.user, history_type='G')]
+    ret = dict(num_new=len(new_v),
+        num_studying=len(studying_v),
+        num_grasped=len(grasped_v))
+
+    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
 def get_history_type(study_date, revise_date):
     '''
     @return

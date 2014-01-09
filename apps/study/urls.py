@@ -10,4 +10,5 @@ urlpatterns = patterns('apps.study.views',
     url(r'^get_study_between/$', 'get_study_between'),
     url(r'^get_all/$', 'get_all'),
     url(r'^get_study_intelligent/$', 'get_study_intelligent'),
+    url(r'^get_statistics/$', 'get_statistics'),
 )
