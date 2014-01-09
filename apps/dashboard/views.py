@@ -7,6 +7,8 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.core.serializers.json import DjangoJSONEncoder
+from django.core.exceptions import ObjectDoesNotExist
+
 import datetime
 import json
 
@@ -43,3 +45,18 @@ def get_statistics_(user):
         num_studying=len(studying_v),
         num_grasped=len(grasped_v))
     return ret
+
+def update_record(user, num_new, num_studying, num_grasped):
+    '''
+    '''
+    today = datetime.date.today()  # record uses date stamp
+    try:
+        r = UserVocabularyRecord.objects.get(user=user, date_stamp=today)
+        r.num_new = num_new
+        r.num_studying = num_studying
+        r.num_grasped = r.num_grasped
+        r.save()
+    except ObjectDoesNotExist:
+        r = UserVocabularyRecord(user=user, date_stamp=today, num_new=num_new, num_studying=num_studying, num_grasped=num_grasped)
+        r.save()
+    return r.getJSONObject()

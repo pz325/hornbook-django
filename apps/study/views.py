@@ -53,6 +53,7 @@ def new_study(request):
         
         ret.append(study_history.getJSONObject())
 
+    update_user_vocabulary_record(request.user)
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 
@@ -83,6 +84,7 @@ def add_grasped(request):
         
         ret.append(study_history.getJSONObject())
 
+    update_user_vocabulary_record(request.user)
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 
@@ -113,6 +115,7 @@ def revise_study(request):
         except ObjectDoesNotExist:
             continue
 
+    update_user_vocabulary_record(request.user)
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 
@@ -199,3 +202,11 @@ def get_history_type(study_date, revise_date):
     if delta.days >= 4:
         return 'G' 
     return 'N'
+
+from apps.dashboard.views import update_record
+def update_user_vocabulary_record(user):
+    new_v = [h.vocabulary for h in StudyHistory.objects.filter(user=user, history_type='N')]
+    studying_v = [h.vocabulary for h in StudyHistory.objects.filter(user=user, history_type='S')]
+    grasped_v = [h.vocabulary for h in StudyHistory.objects.filter(user=user, history_type='G')]
+    update_record(user, len(new_v), len(studying_v), len(grasped_v))
+
