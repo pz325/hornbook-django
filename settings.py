@@ -71,3 +71,5 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
     'django.template.loaders.filesystem.Loader',
 )
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'menrfa-hornbook-django.appspot.com']
