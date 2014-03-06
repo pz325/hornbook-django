@@ -3,6 +3,9 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('apps.study.views',
     url(r'^$', 'index'),
+    url(r'^learnNew/$', 'learn_new'),
+    url(r'^recap/$', 'recap'),
+    
     url(r'^api.html/$', 'api_index'),
     url(r'^new_study/$', 'new_study'),
     url(r'^add_grasped/$', 'add_grasped'),

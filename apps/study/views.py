@@ -18,6 +18,16 @@ def index(request):
         context_instance=RequestContext(request))
 
 @login_required
+def learn_new(request):
+    return render_to_response('study/learnNew.html', 
+        context_instance=RequestContext(request))
+
+@login_required
+def recap(request):
+    return render_to_response('study/recap.html', 
+        context_instance=RequestContext(request))
+
+@login_required
 def api_index(request):
     return render_to_response('study/api.html',
         context_instance=RequestContext(request))

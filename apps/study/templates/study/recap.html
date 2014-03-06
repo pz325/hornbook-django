@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block preload_js %}
+    <script type="text/javascript" src="/js/flashcard.js"></script>
+    <script type="text/javascript" src="/js/study_api.js"></script>
+    <script type="text/javascript" src="/js/vocabulary_gen_strategy.js"></script>
+    <script type="text/javascript" src="/js/study.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="controllers_wrapper">
+        <div class="controllers">
+            <span class="settings">
+                History: <select id="select_previous_study">
+                    <option value="intelligent">Intelligent</option>
+                    <option value="last_week">Last Week</option>
+                    <option value="last_month">Last Month</option>
+                </select>
+            </span>
+            <button id="button_load_history">Load History</button>
+            <button id="button_recap">Recap</button>
+        </div>
+    </div>
+    <div id="all_study">
+    </div>
+    <div id= "flashcard", class="flashcard">
+    </div>
+    <div id="recap">
+        <button id="button_add_to_recap_list">Add to Recap</button>
+        <div id="recap_list"></div>
+    </div>
+    </div>
+{% endblock %}

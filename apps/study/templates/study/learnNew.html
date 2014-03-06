@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block preload_js %}
+    <script type="text/javascript" src="/js/flashcard.js"></script>
+    <script type="text/javascript" src="/js/study_api.js"></script>
+    <script type="text/javascript" src="/js/vocabulary_gen_strategy.js"></script>
+    <script type="text/javascript" src="/js/study.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="controllers_wrapper">
+        <div class="controllers">
+            New words:<input type="text" id="input_today_study">
+            <button id="button_add_new">Add New</button>
+            <button id="button_save_to_server">Save</button>
+        </div>
+    </div>
+    <div id="all_study">
+    </div>
+    <div id= "flashcard", class="flashcard">
+    </div>
+    <div id="recap">
+        <button id="button_add_to_recap_list">Add to Recap</button>
+        <div id="recap_list"></div>
+    </div>
+    </div>
+{% endblock %}
