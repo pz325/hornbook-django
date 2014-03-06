@@ -2,7 +2,7 @@
 	"folders":
 	[
 		{
-			"path": "/D/projects/hornbook-django",
+			"path": ".",
             "file_exclude_patterns":[
                 ".pyc",
                 ".ico"

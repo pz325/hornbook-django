@@ -22,24 +22,28 @@
   </head>
 
   <body>
-
     <div class="container">
-      <div class="header">
-        <div class="menu">
-          <a href="/">Home</a>
-          {% block page-header %}
-          {% endblock %}
-        </div>
-        <div class="account">
-          {% if user.is_authenticated %}
-            <span>{{user.username}}</span>
-            <a href="/accounts/logout/">Log out</a>
-          {% else %}
-            <a href="/accounts/login/">Log in</a>
-          {% endif %}
-        </div>
+      <div class="header_container">
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href='/study/'>Study</a>
+              <ul>
+                <li><a href='#'>Learn New</a></li>
+                <li><a href='#'>Recap</a></li>
+              </ul>
+            </li>
+            <li><a href='/dashboard/'>Dashboard</a></li>
+            {% if user.is_authenticated %}
+            <li><a href='/accounts/logout/'>Log out</a></li>
+            {% else %}
+            <li><a href="/accounts/login/">Log in</a></li>
+            {% endif %}
+          </ul>
+          <div class="username">{{user.username}}</div>
+        </nav>
       </div>
-      
+
       <div class="mainbody">
         <div class="message">
           {% if error %}<div class="error">{{ error }}</div>{% endif %}
@@ -55,7 +59,7 @@
       </div>
 
       <div class="footer">
-        <p>Copyright © 2013 All Rights Reserved </p>
+        <p>Copyright © 2013 - 2014 Ping Zou All Rights Reserved </p>
       </div>
     </div>
 

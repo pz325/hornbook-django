@@ -1,16 +1,71 @@
 /* header */
-.header
+.header_container
 {
-    overflow: auto;
+    font-size: 2em;
+    color: #FFFFFF;
+    background: #0099CC;
 }
-.header .menu
-{
-    float: left;
-}
-.header .account
+.header_container .username
 {
     float: right;
 }
+
+/* popup menu */
+nav ul ul {
+    display: none;
+}
+nav ul li:hover > ul {
+    display: block;
+}
+nav ul {
+    background: #0099CC; 
+    padding: 0 20px;
+    list-style: none;
+    position: relative;
+    display: inline-table;
+}
+    nav ul:after {
+        content: ""; clear: both; display: block;
+    }
+    nav ul li {
+        float: left;
+    }
+
+nav ul li:hover {
+    background: #0099EE;
+}
+    nav ul li:hover a {
+        color: #FFFFFF;
+    }
+        nav ul li a {
+            display: block; 
+            padding: 0px 40px 0px 40px;
+            color: #FFFFFF; 
+            text-decoration: none;
+        }
+
+nav ul ul {
+    background: #0099EE; 
+    border-radius: 0px; 
+    padding: 0;
+    position: absolute; 
+    top: 100%;
+}
+    nav ul ul li {
+        float: none; 
+        border-top: 1px solid #EEEEEE;
+        border-bottom: 1px solid #EEEEEE;
+        position: relative;
+    }
+        nav ul ul li a {
+            padding: 15px 40px 0px 40px;
+            color: #fff;
+        }   
+            nav ul ul li a:hover {
+                background: #0099EE;
+            }
+
+
 
 /* Study page controllers*/
 .controllers_wrapper
