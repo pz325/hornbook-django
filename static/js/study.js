@@ -8,19 +8,6 @@ $(document).ready(function() {
     var currentMode_ = '';
     var recapList_ = new VocabularyList();
 
-/// utility methods
-    var getLastWeek = function() {
-        var today = new Date();
-        var lastWeek = new Date(today.getTime()-1000*60*60*24*7);
-        return lastWeek ;
-    };
-
-    var getLastMonth = function() {
-        var today = new Date();
-        var lastMonth = new Date(today.getTime()-1000*60*60*24*30);
-        return lastMonth ;
-    };
-
     var resetUI = function() {
        $txtAllStudy_.text("");
        $txtRecapList_.text("");
@@ -97,20 +84,12 @@ $(document).ready(function() {
         console.log("history: ", history);
 
         if (history === "intelligent") {
-            return getStudyHistoryIntelligent();
+            return StudyAPI.getStudyIntelligent();
         }
 
         if (history === "last_week" || history === "last_month") {
             return getStudyHistoryBetween(history);
         }
-    };
-
-    /*
-     * call StudyAPI.getStudyIntelligent()
-     * @return $.ajax() deferred object
-     */
-    var getStudyHistoryIntelligent = function() {
-        return StudyAPI.getStudyIntelligent();
     };
 
     /*
@@ -122,11 +101,11 @@ $(document).ready(function() {
         var end_date = new Date();
         var start_date = null;
         if (history === "last_week") {
-            start_date = getLastWeek();
+            start_date = Util.getLastWeek();
         }
         if (history === "last_month") {
-            start_date = getLastMonth();
-        }
+            start_date = Util.getLastMonth();
+
         console.log('end_date (today):', end_date);
         console.log('start_date: ', start_date);
         return StudyAPI.getStudyBetween(start_date, end_date);
@@ -134,8 +113,10 @@ $(document).ready(function() {
 
     /**
      * Flashcard click callback in revise mode
-     *     update study history's revise date
-     *     remove the current from studyList_ (update $txtAllStudy_)
+     *     remove from studyList_, and save to graspedList_ or recapList_
+     *     update progress UI
+     *     if studyList_ is to be empty,
+     *         save revising history to server
      *     show next vocabulary
      */
     var reviseClickCallback = function() {

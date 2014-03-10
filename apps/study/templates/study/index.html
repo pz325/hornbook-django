@@ -9,10 +9,12 @@
 
 {% block content %}
     <div class="controllers_wrapper">
-        <div class="controllers">
+        <div>
             New words:<input type="text" id="input_today_study">
             <button id="button_add_new">Add New</button>
             <button id="button_save_to_server">Save</button>
+        </div>
+        <div>
             <span class="settings">
                 History: <select id="select_previous_study">
                     <option value="intelligent">Intelligent</option>
@@ -21,7 +23,6 @@
                 </select>
             </span>
             <button id="button_load_history">Load History</button>
-            <button id="button_recap">Recap</button>
         </div>
     </div>
     <div id="all_study">
