@@ -21,18 +21,20 @@ $(document).ready(function() {
 
        clickCallback_ = null;
        currentMode_ = '';
+
+       Flashcard.displayVocabulary("");
     };
 
     /**
      *
      */
     var setUI = function() {
+        // display all vocabularies
+        $txtAllStudy_.text(studyList_.join(" "));
         console.log('Study list: ', studyList_);
         // bind flashcard strategy
         Flashcard.setHanCharacterDivClickCallback(clickCallback_);
         Flashcard.displayVocabulary(studyList_.pop());
-        // display all vocabularies
-        $txtAllStudy_.text(studyList_);
     };
 
 /// ======== study new ========
@@ -137,9 +139,10 @@ $(document).ready(function() {
             // go to recap mode
             if (recapList_.length > 0)
                 initRecap();
+            else
+                resetUI();
         } else {
             Flashcard.displayVocabulary(studyList_.pop());
-            $txtAllStudy_.text(studyList_);
         }
     };
 
@@ -177,8 +180,10 @@ $(document).ready(function() {
 
                 setUI();
             }
-            else
+            else {
                 Util.notifyError("No learning history available");
+                $txtAllStudy_.text("No learning history available");
+            }
         })
         .fail(function(data, textStatus, jqXHR) {
             Util.notifyError("Failed loading the study history");
@@ -199,9 +204,10 @@ $(document).ready(function() {
                 // go to recap mode
                 if (recapList_.length > 0)
                     initRecap();
+                else
+                    resetUI();
             } else {
                 Flashcard.displayVocabulary(studyList_.pop());
-                $txtAllStudy_.text(studyList_);
                 $txtRecapList_.text(recapList_);
             }
         }
