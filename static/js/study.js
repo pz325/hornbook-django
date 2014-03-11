@@ -3,15 +3,22 @@ $(document).ready(function() {
 /// Study elements
     var $txtAllStudy_ = $("#all_study");
     var $txtRecapList_ = $("#recap #recap_list");
-    var studyList_ = new VocabularyList();
+    
+    var studyList_ = [];
+    var graspedList_ = [];
+    var recapList_ = [];
+    
     var clickCallback_ = null;
     var currentMode_ = '';
-    var recapList_ = new VocabularyList();
 
     var resetUI = function() {
        $txtAllStudy_.text("");
        $txtRecapList_.text("");
-       studyList_.clear();
+       
+       studyList_ = [];
+       graspedList_ = [];
+       recapList_ = [];
+
        clickCallback_ = null;
        currentMode_ = '';
     };
@@ -20,23 +27,30 @@ $(document).ready(function() {
      *
      */
     var setUI = function() {
-        var vocabularies = studyList_.getAll();
-        console.log('Study list: ', vocabularies);
-        // display all vocabularies
-        $txtAllStudy_.text(vocabularies);
+        console.log('Study list: ', studyList_);
         // bind flashcard strategy
         Flashcard.setHanCharacterDivClickCallback(clickCallback_);
-        Flashcard.displayVocabulary(studyList_.get());
+        Flashcard.displayVocabulary(studyList_.pop());
+        // display all vocabularies
+        $txtAllStudy_.text(studyList_);
     };
 
 /// ======== study new ========
 
     /*
-     * Flashcard click callback in study new mode
-     *     display the next vocabulary
+     * Flashcard click callback in StudyNew mode
+     *     save the current vocabulary to graspedList_ (as a holder)
+     *     pop one element from studyList_
+     *     if studyList_ is empty, swap studyList_ and graspedList_
+     *     shuffle studyList_
      */
     var studyNewClickCallback = function() {
-        Flashcard.displayVocabulary(studyList_.getNext());
+        graspedList_.push(Flashcard.getLastWord());
+        Flashcard.displayVocabulary(studyList_.pop());
+        if (studyList_.length === 0) {
+            studyList_ = Util.shuffle(graspedList_);
+            graspedList_ = [];    
+        }
     };
 
     /*
@@ -48,10 +62,9 @@ $(document).ready(function() {
         // get new studies
         var today_study = $("#input_today_study").val().trim();
         console.log("today study: ", today_study);
-        studyList_.set(today_study.split(" "));
+        studyList_ = today_study.split(" ");
 
-        clickCallback_ = studyNewClickCallback;
-        
+        clickCallback_ = studyNewClickCallback;        
         currentMode_ = "StudyNew";
 
         setUI();
@@ -63,7 +76,7 @@ $(document).ready(function() {
 
     $("#button_save_to_server").click(function() {
         if (currentMode_ === "StudyNew") {
-            StudyAPI.newStudy(studyList_.getAll().join(" "))
+            StudyAPI.newStudy(studyList_.join(" "))
             .done(function(data, textStatus, jqXHR) {
                 Util.notifySuccess("New study saved");
             })
@@ -73,8 +86,8 @@ $(document).ready(function() {
         }
     });
 
-/// ======== revise ========
-    
+
+/// ======== revise ========    
     /**
      * call getStudyHistoryIntelligent() or getStudyHistoryBetween()
      * @return $.ajax() deferred object
@@ -82,14 +95,12 @@ $(document).ready(function() {
     var getStudyHistory = function() {
         var history = $('#select_previous_study option:selected').val();
         console.log("history: ", history);
-
-        if (history === "intelligent") {
+        
+        if (history === "intelligent")
             return StudyAPI.getStudyIntelligent();
-        }
 
-        if (history === "last_week" || history === "last_month") {
+        if (history === "last_week" || history === "last_month")
             return getStudyHistoryBetween(history);
-        }
     };
 
     /*
@@ -100,10 +111,9 @@ $(document).ready(function() {
         var today = new Date();
         var end_date = new Date();
         var start_date = null;
-        if (history === "last_week") {
+        if (history === "last_week")
             start_date = Util.getLastWeek();
-        }
-        if (history === "last_month") {
+        if (history === "last_month")
             start_date = Util.getLastMonth();
 
         console.log('end_date (today):', end_date);
@@ -113,21 +123,36 @@ $(document).ready(function() {
 
     /**
      * Flashcard click callback in revise mode
-     *     remove from studyList_, and save to graspedList_ or recapList_
+     *     remove from studyList_, and save to graspedList_
      *     update progress UI
      *     if studyList_ is to be empty,
      *         save revising history to server
      *     show next vocabulary
      */
     var reviseClickCallback = function() {
-        StudyAPI.reviseStudy(studyList_.get())
-        .done(function(data, textStatus, jqXHR) {
+        graspedList_.push(Flashcard.getLastWord());
+
+        if (studyList_.length === 0) {
+            saveRevise();
+            Flashcard.displayVocabulary("");
+        } else {
+            Flashcard.displayVocabulary(studyList_.pop());
+            $txtAllStudy_.text(studyList_);
+        }
+    };
+
+    /**
+     * Save revise to server
+     * Start Revise mode if ncessary
+     */
+    var saveRevise = function() {
+        $.when(
+            StudyAPI.reviseStudy(graspedList_.join(" ")),
+            StudyAPI.newStudy(recapList_.join(" "))
+        ).done(function(r1, r2) {
             Util.notifySuccess("Revise saved");
-            studyList_.remove();
-            $txtAllStudy_.text(studyList_.getAll());
-            Flashcard.displayVocabulary(studyList_.get());
         })
-        .fail(function(data, textStatus, jqXHR) {
+        .fail(function(r1, r2) {
             Util.notifyError("Failed saving revise");
         });
     };
@@ -143,14 +168,15 @@ $(document).ready(function() {
 
             Util.notifySuccess("Study history loaded");
             console.log('history data: ', data);
-            var v = JSON.parse(data);
-            studyList_.set(v);
-            clickCallback_ = reviseClickCallback;
-            currentMode_ = "Revise";
+            studyList_ = JSON.parse(data);
+            if (studyList_.length > 0) {
+                clickCallback_ = reviseClickCallback;
+                currentMode_ = "Revise";
 
-            // clear recap list
-            recapList_.clear();
-            setUI();
+                setUI();
+            }
+            else
+                Util.notifyError("No learning history available");
         })
         .fail(function(data, textStatus, jqXHR) {
             Util.notifyError("Failed loading the study history");
@@ -163,50 +189,46 @@ $(document).ready(function() {
 
     $("#button_add_to_recap_list").click(function() {
         if (currentMode_ === 'Revise') {
-            console.log('recap: ', studyList_.get());
-            recapList_.add(studyList_.get());
-            studyList_.remove();
-            $txtAllStudy_.text(studyList_.getAll());
-            Flashcard.displayVocabulary(studyList_.get());
-            $txtRecapList_.text(recapList_.getAll());
+            recapList_.push(Flashcard.getLastWord());
+            console.log('recap list: ', recapList_);
+            console.log('study list: ', studyList_)
+            if (studyList_.length === 0) {
+                saveRevise();
+                Flashcard.displayVocabulary("");
+            } else {
+                Flashcard.displayVocabulary(studyList_.pop());
+                $txtAllStudy_.text(studyList_);
+                $txtRecapList_.text(recapList_);
+            }
         }
     });
+
 /// ======== recap ========
 
     var recapClickCallback = function() {
-        Flashcard.displayVocabulary(studyList_.getNext());
+        recapList_.push(Flashcard.getLastWord());
+        Flashcard.displayVocabulary(studyList_.pop());
+        if (studyList_.length === 0) {
+            studyList_ = recapList_;
+            recapList_ = [];
+        }
     };
 
     var initRecap = function() {
         // get study history
         resetUI();
 
-        studyList_.set(recapList_.getAll());
+        studyList_ = recapList_;
+        recapList_ = [];
+
         clickCallback_ = recapClickCallback;
         currentMode_ = "Recap";
-        // reset recap list
-        recapList_.clear();
 
         setUI();
     };
 
-    $("#button_recap").click(function() {
-        var vocabularies = recapList_.getAll().join(' ');
-        console.log("Recap: ", vocabularies);
-        StudyAPI.newStudy(vocabularies)   // treat recap as new
-        .done(function(data, textStatus, jqXHR) {
-            Util.notifySuccess("Recap saved");
-            initRecap();
-        })
-        .fail(function(data, textStatus, jqXHR) {
-            Util.notifyError("Failed saving the recap");
-        });
-    });
-
-
-
-
     // initialise
     // bind Flashcard
     Flashcard.init($("#flashcard"));
+
 });

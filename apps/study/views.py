@@ -12,6 +12,8 @@ import datetime
 import json
 import random
 
+import logging
+
 @login_required
 def index(request):
     return render_to_response('study/index.html', 
