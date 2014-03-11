@@ -134,7 +134,9 @@ $(document).ready(function() {
 
         if (studyList_.length === 0) {
             saveRevise();
-            Flashcard.displayVocabulary("");
+            // go to recap mode
+            if (recapList_.length > 0)
+                initRecap();
         } else {
             Flashcard.displayVocabulary(studyList_.pop());
             $txtAllStudy_.text(studyList_);
@@ -194,7 +196,9 @@ $(document).ready(function() {
             console.log('study list: ', studyList_)
             if (studyList_.length === 0) {
                 saveRevise();
-                Flashcard.displayVocabulary("");
+                // go to recap mode
+                if (recapList_.length > 0)
+                    initRecap();
             } else {
                 Flashcard.displayVocabulary(studyList_.pop());
                 $txtAllStudy_.text(studyList_);
@@ -215,16 +219,14 @@ $(document).ready(function() {
     };
 
     var initRecap = function() {
-        // get study history
-        resetUI();
-
         studyList_ = recapList_;
         recapList_ = [];
-
+        $txtRecapList_.text("recap mode");
         clickCallback_ = recapClickCallback;
         currentMode_ = "Recap";
 
         setUI();
+        Util.notifySuccess("Switch to Recap mode");
     };
 
     // initialise
