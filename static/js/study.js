@@ -180,6 +180,7 @@ $(document).ready(function() {
             console.log('history data: ', data);
             studyList_ = JSON.parse(data);
             if (studyList_.length > 0) {
+                studyList_ = Util.shuffle(studyList_);
                 clickCallback_ = reviseClickCallback;
                 currentMode_ = "Revise";
 
