@@ -78,7 +78,12 @@ $(document).ready(function() {
 
     $("#button_save_to_server").click(function() {
         if (currentMode_ === "StudyNew") {
-            StudyAPI.newStudy(studyList_.join(" "))
+            var newWords = [];
+            newWords.push(Flashcard.getLastWord());
+            newWords.push.apply(newWords, graspedList_);
+            newWords.push.apply(newWords, studyList_);
+            console.log(newWords);
+            StudyAPI.newStudy(newWords.join(" "))
             .done(function(data, textStatus, jqXHR) {
                 Util.notifySuccess("New study saved");
             })
