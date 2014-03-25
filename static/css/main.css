@@ -1,80 +1,3 @@
-/* header */
-.header_container
-{
-    font-size: 2em;
-    color: #FFFFFF;
-    background: #0099CC;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-}
-.header_container .username
-{
-    font-size: 1em;
-    float: right;
-    padding-right: 10px;
-}
-
-.header_container ul {
-    margin: 5px;
-}
-
-.header_container ul ul {
-    display: none;
-}
-.header_container ul li:hover > ul {
-    display: block;
-}
-.header_container ul {
-    background: #0099CC; 
-    padding: 0 20px;
-    list-style: none;
-    position: relative;
-    display: inline-table;
-}
-    .header_container ul:after {
-        content: ""; clear: both; display: block;
-    }
-    .header_container ul li {
-        float: left;
-    }
-
-.header_container ul li:hover {
-    background: #0099EE;
-}
-    .header_container ul li:hover a {
-        color: #FFFFFF;
-    }
-        .header_container ul li a {
-            display: block; 
-            padding: 0px 40px 0px 40px;
-            color: #FFFFFF; 
-            text-decoration: none;
-        }
-
-.header_container ul ul {
-    background: #0099EE; 
-    border-radius: 0px; 
-    padding: 0;
-    position: absolute; 
-    top: 100%;
-}
-    .header_container ul ul li {
-        float: none; 
-        border-top: 1px solid #EEEEEE;
-        border-bottom: 1px solid #EEEEEE;
-        position: relative;
-    }
-        .header_container ul ul li a {
-            padding: 15px 40px 0px 40px;
-            color: #fff;
-        }   
-            .header_container ul ul li a:hover {
-                background: #0099EE;
-            }
-
-
-
 /* Study page controllers*/
 .controllers_wrapper
 {
@@ -107,21 +30,7 @@
     background-color: #C7EDDD
 }
 
-html, body { height : 100%; }
-.header a {
-    text-decoration:none;
-    color: #FFFFFF; 
-}
-.header a:hover {
-    text-decoration:none;
-    color: #FFFFFF;
-}
-.header a:visited {
-    text-decoration:none;   
-    color: #FFFFFF;
-}
-
-.container {
+/*.container {
     width: 90%;
     height: auto;
     margin: 10px auto 10px auto;
@@ -133,43 +42,7 @@ html, body { height : 100%; }
     border-radius: 10px;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
-}
-
-.mainbody,
-.header,
-.footer {
-    padding: 5px;
-}
-.mainbody {
-    margin-top: 0;
-    min-height: 150px;
-    height: auto;
-}
-.header {
-    height: 40px;
-    border-bottom: 1px solid #EEE;
-    background-color: #0099CC;
-    -webkit-border-top-left-radius: 10px;
-    -webkit-border-top-right-radius: 10px;
-    -moz-border-radius-topleft: 10px;
-    -moz-border-radius-topright: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-    color: #FFFFFF;
-    font-size: 25px;
-}
-.footer {
-    height: 40px;
-    background-color: whiteSmoke;
-    border-top: 1px solid #DDD;
-    -webkit-border-bottom-left-radius: 10px;
-    -webkit-border-bottom-right-radius: 10px;
-    -moz-border-radius-bottomleft: 10px;
-    -moz-border-radius-bottomright: 10px;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-    text-align: center;
-}
+}*/
 
 .prettyprint
 {

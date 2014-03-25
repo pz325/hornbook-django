@@ -74,6 +74,7 @@ $(document).ready(function() {
 
     $("#button_add_new").click(function() {
         initStudyNew();
+        return false;
     });
 
     $("#button_save_to_server").click(function() {
@@ -91,6 +92,7 @@ $(document).ready(function() {
                 Util.notifyError("Failed saving new study");
             });
         }
+        return false;
     });
 
 
@@ -198,6 +200,7 @@ $(document).ready(function() {
 
     $("#button_load_history").click(function() {
         initRevise();
+        return false;
     });
 
     $("#button_add_to_recap_list").click(function() {
@@ -217,6 +220,7 @@ $(document).ready(function() {
                 $txtRecapList_.text(recapList_);
             }
         }
+        return false;
     });
 
 /// ======== recap ========
