@@ -102,14 +102,7 @@ $(document).ready(function() {
      * @return $.ajax() deferred object
      */
     var getStudyHistory = function() {
-        var history = $('#select_previous_study option:selected').val();
-        console.log("history: ", history);
-        
-        if (history === "intelligent")
-            return StudyAPI.getStudyIntelligent();
-
-        if (history === "last_week" || history === "last_month")
-            return getStudyHistoryBetween(history);
+        return StudyAPI.getStudyIntelligent();
     };
 
     /*
