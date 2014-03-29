@@ -4,18 +4,6 @@
     overflow: auto;
 }
 
-#recap
-{
-    margin-top: 2em;
-}
-#button_add_to_recap_list
-{
-    height: 3em;
-    background-color: #0099CC;
-    color: #FFFFFF;
-    font-weight: bold;
-}
-
 /* han_character styles */
 .han_character
 {

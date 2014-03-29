@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
 /// Study elements
+    var $panel = $("#learning_panel");
     var $txtRecapList_ = $("#recap #recap_list");
     var $progressBarLearning_ = $('#progressBarLearning');
     var studyList_ = [];
@@ -11,18 +12,34 @@ $(document).ready(function() {
     var clickCallback_ = null;
     var currentMode_ = '';
 
-     /**
-     * @param ratio 0.2334
+    var showPanel = function(toShow) {
+        if (toShow) $panel.removeClass("hide");
+        else $panel.addClass("hide");
+    }
+
+    /**
+     * @param index
+     * @param total
      */
-    var updateProgress = function(ratio) {
-        var percentage = Math.round(ratio * 100).toString() + "%";
-        $progressBarLearning_.css({"width": percentage});
+    var updateProgress = function(index, total) {
+        if (total === 0)
+        {
+            $progressBarLearning_.css({"width": "0%"});
+            $progressBarLearning_.text("");
+        }
+        else
+        {
+            var percentage = Math.round((index+1)/total*100).toString() + "%";
+            var t = (index+1).toString() + "/" + total.toString();
+            $progressBarLearning_.css({"width": percentage});
+            $progressBarLearning_.text(t);
+        }
     }
 
     var resetUI = function() {
+        showPanel(false);
         $txtRecapList_.text("");
-        
-        updateProgress(0);       
+        updateProgress(0, 0);       
         studyList_ = [];
         studyIndex_ = 0;
         graspedList_ = [];
@@ -38,13 +55,14 @@ $(document).ready(function() {
      *
      */
     var initUI = function() {
-        // set learning progress bar to 0%
-        updateProgress(0);
+        showPanel(true);
         console.log('Study list: ', studyList_);
         // bind flashcard strategy
         Flashcard.setHanCharacterDivClickCallback(clickCallback_);
         // display the first character
         Flashcard.displayVocabulary(studyList_[studyIndex_]);
+        // set learning progress bar to 0%
+        updateProgress(0, studyList_.length);
     };
 
 
@@ -59,12 +77,13 @@ $(document).ready(function() {
      */
     var studyNewClickCallback = function() {
         studyIndex_++;
-        updateProgress(studyIndex_/studyList_.length);
-        Flashcard.displayVocabulary(studyList_[studyIndex_]);
-        if (studyIndex_ === studyList_.length-1) {
+        if (studyIndex_ === studyList_.length)
+        {
             studyList_ = Util.shuffle(studyList_);
             studyIndex_ = 0;
         }
+        Flashcard.displayVocabulary(studyList_[studyIndex_]);
+        updateProgress(studyIndex_, studyList_.length);
     };
 
     /*
@@ -124,16 +143,19 @@ $(document).ready(function() {
     var reviseClickCallback = function() {
         graspedList_.push(studyList_[studyIndex_]);
         studyIndex_++;
-        updateProgress(studyIndex_/studyList_.length);
-        if (studyIndex_ === studyList_.length) {
+        if (studyIndex_ === studyList_.length)
+        {
             saveRevise();
             // go to recap mode
             if (recapList_.length > 0)
                 initRecap();
             else
                 resetUI();
-        } else {
+        }
+        else
+        {
             Flashcard.displayVocabulary(studyList_[studyIndex_]);
+            updateProgress(studyIndex_, studyList_.length);
         }
     };
 
@@ -189,10 +211,7 @@ $(document).ready(function() {
     $("#button_add_to_recap_list").click(function() {
         if (currentMode_ === 'Revise') {
             recapList_.push(studyList_[studyIndex_]);
-            studyIndex_ ++;
-            updateProgress(studyIndex_/studyList_.length);
-            console.log('recap list: ', recapList_);
-            console.log('study list: ', studyList_)
+            studyIndex_++;
             if (studyIndex_ === studyList_.length) {
                 saveRevise();
                 // go to recap mode
@@ -202,6 +221,9 @@ $(document).ready(function() {
                     resetUI();
             } else {
                 Flashcard.displayVocabulary(studyList_[studyIndex_]);
+                updateProgress(studyIndex_, studyList_.length);
+                console.log('recap list: ', recapList_);
+                console.log('study list: ', studyList_)
                 $txtRecapList_.text(recapList_);
             }
         }
@@ -212,11 +234,10 @@ $(document).ready(function() {
 
     var recapClickCallback = function() {
         studyIndex_++;
-        updateProgress(studyIndex_/studyList_.length);
-        Flashcard.displayVocabulary(studyList_[studyIndex_]);
-        if (studyIndex_ === studyList_.length-1) {
+        if (studyIndex_ === studyList_.length)
             studyIndex_ = 0;
-        }
+        Flashcard.displayVocabulary(studyList_[studyIndex_]);
+        updateProgress(studyIndex_, studyList_.length);
     };
 
     var initRecap = function() {
@@ -234,5 +255,4 @@ $(document).ready(function() {
     // initialise
     // bind Flashcard
     Flashcard.init($("#flashcard"));
-
 });
