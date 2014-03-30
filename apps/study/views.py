@@ -172,7 +172,7 @@ def get_study_intelligent(request):
     grasped_v = [h.vocabulary for h in StudyHistory.objects.filter(user=request.user, history_type='G')]
     random.shuffle(grasped_v)
 
-    ret = new_v + studying_v + grasped_v[:10];
+    ret = new_v + studying_v + grasped_v[:20];
 
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
