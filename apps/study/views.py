@@ -222,3 +222,32 @@ def update_user_vocabulary_record(user):
     grasped_v = [h.vocabulary for h in StudyHistory.objects.filter(user=user, history_type='G')]
     update_record(user, len(new_v), len(studying_v), len(grasped_v))
 
+
+def removeWords(user):
+    userV = StudyHistory.objects.filter(user=user)
+    # get words entries from user's V
+    words = []
+    for v in userV:
+        if len(v.vocabulary) > 1:
+            words.append(v)
+    
+    print words
+    for w in words:
+        # split w into single characters
+        # if exists, ignore
+        # else, add to db, keeping all study history info as w
+        # delete w from db
+        for c in w.vocabulary:
+            hit = StudyHistory.objects.filter(vocabulary=c)
+            if hit:
+                print 'found', c
+            else:
+                print c, 'not found in db'
+                newC = StudyHistory(user=user, 
+                    vocabulary=c, 
+                    study_date=w.study_date, 
+                    revise_date=w.revise_date, 
+                    history_type=w.history_type, 
+                    studied_times=w.studied_times)
+                newC.save()
+        w.delete()
