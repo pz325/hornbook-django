@@ -1,8 +1,41 @@
+
 from django.db import models
 from django.core.cache import cache
+from django.contrib import admin
 import os.path
 import random
 from trie import Trie
+
+import hanzi
+
+class Pinyin(models.Model):
+    initial = models.CharField(max_length=3, choices=hanzi.INITIAL)
+    final = models.CharField(max_length=8, choices=hanzi.FINAL)
+    tone = models.PositiveSmallIntegerField(default=0, choices=hanzi.TONES)
+    pinyin_str = models.CharField(max_length=20) # tone annotated pinyin str
+
+class Tag(models.Model):
+    tag = models.CharField(max_length=200)
+
+class Vocabulary(models.Model):
+    '''
+    Hanzi vocabulary model
+    '''
+    vocabulary = models.CharField(max_length=10)
+    numStrokes = models.PositiveSmallIntegerField(default=0)
+    component = models.CharField(max_length=4, choices=hanzi.COMPONENTS)
+    pinyins = models.ManyToManyField(Pinyin)  # handle multiple pronounciation
+    tags = models.ManyToManyField(Tag)
+
+class TaggedVocabulary(models.Model):
+    tag = models.ForeignKey(Tag)
+    vocabularies = models.ManyToManyField(Vocabulary)
+
+admin.site.register(Pinyin)
+admin.site.register(Tag)
+admin.site.register(Vocabulary)
+admin.site.register(TaggedVocabulary)
+
 
 FILE_MOST_COMMON_CHARACTERS = '/../../data/most_common_chinese_characters.txt'
 FILE_MOST_COMMON_WORDS = '/../../data/most_common_chinese_words.txt'
