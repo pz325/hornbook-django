@@ -20,9 +20,11 @@ INSTALLED_APPS = (
     # 'django.contrib.sites',        # A framework for managing multiple sites with one Django installation.
     'django.contrib.messages',     # A messaging framework.
     # 'django.contrib.staticfiles',  # A framework for managing static files.
+    'django.contrib.staticfiles',  # handle static file with GAE
     'djangotoolbox',
     'autoload',
     'dbindexer',
+
 
     # project apps
     'apps.hornbook_api',
@@ -57,7 +59,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 # corresponding output. Helps a lot with print-debugging.
 TEST_RUNNER = 'djangotoolbox.test.CapturingTestSuiteRunner'
 
-ADMIN_MEDIA_PREFIX = '/media/admin/'
 TEMPLATE_DIRS = (os.path.join(os.path.dirname(__file__), 'templates'),)
 
 ROOT_URLCONF = 'urls'
@@ -73,3 +74,6 @@ TEMPLATE_LOADERS = (
 )
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'menrfa-hornbook-django.appspot.com']
+
+STATIC_ROOT = 'static'
+STATIC_URL  = '/static/'

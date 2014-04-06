@@ -33,6 +33,16 @@ indexes:
   - name: __key__
     direction: desc
 
+- kind: hornbook_api_pinyin
+  properties:
+  - name: __key__
+    direction: desc
+
+- kind: hornbook_api_vocabulary
+  properties:
+  - name: __key__
+    direction: desc
+
 - kind: study_studyhistory
   properties:
   - name: user_id

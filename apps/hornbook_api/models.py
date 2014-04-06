@@ -9,13 +9,33 @@ from trie import Trie
 import hanzi
 
 class Pinyin(models.Model):
-    initial = models.CharField(max_length=3, choices=hanzi.INITIAL)
-    final = models.CharField(max_length=8, choices=hanzi.FINAL)
+    initial = models.CharField(max_length=4, choices=hanzi.INITIALS)
+    final = models.CharField(max_length=20, choices=hanzi.FINALS)
     tone = models.PositiveSmallIntegerField(default=0, choices=hanzi.TONES)
-    pinyin_str = models.CharField(max_length=20) # tone annotated pinyin str
+    pinyin_str = models.CharField(max_length=20, editable=False) # tone annotated pinyin str
+
+    # def save(self, *args, **kwargs):
+    #     '''
+    #     extends default save() to create pinyin_str
+    #     '''
+    #     self.pinyin_str = '{initial}{final}{tone}'.format(initial=self.initial, final=self.final, tone=self.tone)
+    #     super(Pinyin, self).save(*args, **kwargs)
+
+    def __str__(self):
+        return '{initial}{final}{tone}'.format(initial=self.initial, final=self.final, tone=self.tone)
+
+    # @classmethod
+    # def create(cls, initial, final, tone):
+    #     pinyin = cls(initial, final, tone)
+
+    #     pinyin.pinyin_str = 
+    # #     return cls(name=name, email=email)
 
 class Tag(models.Model):
     tag = models.CharField(max_length=200)
+
+    def __str__(self):
+        return str(self.tag)
 
 class Vocabulary(models.Model):
     '''
@@ -26,6 +46,10 @@ class Vocabulary(models.Model):
     component = models.CharField(max_length=4, choices=hanzi.COMPONENTS)
     pinyins = models.ManyToManyField(Pinyin)  # handle multiple pronounciation
     tags = models.ManyToManyField(Tag)
+
+    # @classmethod
+    # def create(vocabulary):
+    #     return cls(name=name, email=email)
 
 class TaggedVocabulary(models.Model):
     tag = models.ForeignKey(Tag)
@@ -93,3 +117,4 @@ class MostCommonWord():
         if MostCommonWord.trie is None:
             MostCommonWord.generate_trie()
         return MostCommonWord.trie.enumerate(ref_character)
+

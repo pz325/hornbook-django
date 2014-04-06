@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
 TONES = (
-    ('0', '轻声'),
-    ('1', '一声'),
-    ('2', '二声'),
-    ('3', '三声'),
-    ('4', '四声')
+    (0, '轻声'),
+    (1, '一声'),
+    (2, '二声'),
+    (3, '三声'),
+    (4, '四声')
 )
 
-INITIAL = (
+INITIALS = (
     ('b', 'b'),
     ('p', 'p'),
     ('m', 'm'),
@@ -34,7 +34,7 @@ INITIAL = (
     ('w', 'w'),
 )
 
-FINAL = (
+FINALS = (
     ('a', 'a'),
     ('o', 'o'),
     ('e', 'e'),
@@ -70,56 +70,87 @@ FINAL = (
     ('onɡ', 'onɡ')
 )
 
-ATONE = 'ā á ǎ à'.split(' ')
-OTONE = 'ō ó ǒ ò'.split(' ')
-ETONE = 'ē é ě è'.split(' ')
-ITONE = 'ī í ǐ ì'.split(' ')
-UTONE = 'ū ú ǔ ù'.split(' ')
-YUTONE = 'ǖ ǘ ǚ ǜ'.split(' ')
+ATONES = 'ā á ǎ à'.split(' ')
+OTONES = 'ō ó ǒ ò'.split(' ')
+ETONES = 'ē é ě è'.split(' ')
+ITONES = 'ī í ǐ ì'.split(' ')
+UTONES = 'ū ú ǔ ù'.split(' ')
+YUTONES = 'ǖ ǘ ǚ ǜ'.split(' ')
 
-TONE_ANNOTATION_REPLACE = dict(
-    a=ATONE,
-    o=OTONE,
-    e=ETONE,
-    i=ITONE,
-    u=UTONE,
-    yu=YUTONE)
+TONE_ANNOTATION_REPLACEMENTS = dict(
+    a=ATONES,
+    o=OTONES,
+    e=ETONES,
+    i=ITONES,
+    u=UTONES,
+    yu=YUTONES)
 
-TONE_ANNOTATION = (
-    ('a', 'a'),
-    ('o', 'o'),
-    ('e', 'e'),
-    ('i', 'i'),
-    ('u', 'u'),
-    ('ü', 'ü'), # yu
-    ('ia', 'a'),
-    ('ua', 'a'),
-    ('uo', 'o'),
-    ('ie', 'e'),
-    ('üe', 'e'),
-    ('ai', 'a'),
-    ('uai', 'a'),
-    ('ei', 'e'),
-    ('ui', 'i'),
-    ('ao', 'a'),
-    ('iao', 'a'),
-    ('ou', 'o'),
-    ('iu', 'u'),
-    ('an', 'a'),
-    ('ian', 'a'),
-    ('uan', 'a'),
-    ('üan', 'a'),
-    ('en', 'e'),
-    ('in', 'i'),
-    ('un', 'u'),
-    ('ün', 'ü'), # yu
-    ('anɡ', 'a'),
-    ('ianɡ', 'a'),
-    ('uanɡ', 'a'),
-    ('enɡ', 'e'),
-    ('ing', 'i'),
-    ('onɡ', 'o')
+TONE_ANNOTATIONS = dict(
+     a='a',
+     o='o',
+     e='e',
+     i='i',
+     u='u',
+     yu='yu', # ü
+     ia='a',
+     ua='a',
+     uo='o',
+     ie='e',
+     yue='e', # üe
+     ai='a',
+     uai='a',
+     ei='e',
+     ui='i',
+     ao='a',
+     iao='a',
+     ou='o',
+     iu='u',
+     an='a',
+     ian='a',
+     uan='a',
+     yuan='a', # üan
+     en='e',
+     yin='i', # in
+     un='u', 
+     ang='a',
+     iang='a',
+     uang='a',
+     eng='e',
+     ing='i',
+     ong='o',
 )
+
+def getPinyinStr(initial, final, tone):
+    '''
+    Generate tonated pinyin string
+    e.g. initial = b, final = a, tone = 3, pinyinStr = bǎ
+    @param initial
+    @param final ü input as it is
+    @tone
+    @return tonated pinyin string
+    '''
+    if tone == 0:
+        return '{i}{f}'.format(i=initial, f=final)
+
+    if final == 'ü': 
+        key = 'yu'
+    elif final == 'üe': 
+        key = 'yue'
+    elif final == 'üan': 
+        key = 'yuan'
+    elif final == 'in': 
+        key = 'yin'
+    else: 
+        key = final
+    replace = TONE_ANNOTATIONS[key]
+    tonatedFinal = []
+    for c in final:
+        if c == replace:
+            tonatedFinal.append(TONE_ANNOTATION_REPLACEMENTS[replace][tone-1])
+        else:
+            tonatedFinal.append(c)
+    f = ''.join(tonatedFinal)
+    return '{i}{f}'.format(i=initial, f=f)
 
 # TODO: to accomplish this
 COMPONENTS = (
@@ -132,7 +163,6 @@ COMPONENTS = (
     ('厂', '偏厂儿'),
 )
 
-final = '''a o e i u ü ia ua uo ie üe ai uai ei ui ao iao ou iu an ian uan üan en in un ün anɡ ianɡ uanɡ enɡ ing onɡ'''
-finals = ',\n'.join(["('{f}', '{f}')".format(f=f) for f in final.split(' ')])
-x = 'ā ɑ a'
-
+# final = '''a o e i u ü ia ua uo ie üe ai uai ei ui ao iao ou iu an ian uan üan en in un ün ang iang uang eng ing ong'''
+# finals = ',\n'.join(["('{f}', '{f}')".format(f=f) for f in final.split(' ')])
+# x = 'ā ɑ a'

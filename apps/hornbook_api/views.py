@@ -61,3 +61,18 @@ def get_most_common_word(request):
         if u_word != last_word:
             break
     return HttpResponse(u_word)
+
+
+import hanzi
+from models import Pinyin
+
+def generateAllPinyin():
+    for initial in hanzi.INITIAL:
+        for final in hanzi.FINAL:
+            for tone in hanzi.TONES:
+                print initial, final, tone
+                pinyin = Pinyin(
+                    initial=initial, 
+                    final=final, 
+                    tone=tone)
+                pinyin.save()
