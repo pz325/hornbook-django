@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 TONES = (
-    (0, '轻声'),
-    (1, '一声'),
-    (2, '二声'),
-    (3, '三声'),
-    (4, '四声')
+    (0, u'轻声'),
+    (1, u'一声'),
+    (2, u'二声'),
+    (3, u'三声'),
+    (4, u'四声')
 )
 
 INITIALS = (
@@ -40,12 +40,12 @@ FINALS = (
     ('e', 'e'),
     ('i', 'i'),
     ('u', 'u'),
-    ('ü', 'ü'),
+    (u'ü', u'ü'),
     ('ia', 'ia'),
     ('ua', 'ua'),
     ('uo', 'uo'),
     ('ie', 'ie'),
-    ('üe', 'üe'),
+    (u'üe', u'üe'),
     ('ai', 'ai'),
     ('uai', 'uai'),
     ('ei', 'ei'),
@@ -57,11 +57,11 @@ FINALS = (
     ('an', 'an'),
     ('ian', 'ian'),
     ('uan', 'uan'),
-    ('üan', 'üan'),
+    (u'üan', u'üan'),
     ('en', 'en'),
     ('in', 'in'),
     ('un', 'un'),
-    ('ün', 'ün'),
+    (u'ün', u'ün'),
     ('anɡ', 'anɡ'),
     ('ianɡ', 'ianɡ'),
     ('uanɡ', 'uanɡ'),
@@ -70,12 +70,12 @@ FINALS = (
     ('onɡ', 'onɡ')
 )
 
-ATONES = 'ā á ǎ à'.split(' ')
-OTONES = 'ō ó ǒ ò'.split(' ')
-ETONES = 'ē é ě è'.split(' ')
-ITONES = 'ī í ǐ ì'.split(' ')
-UTONES = 'ū ú ǔ ù'.split(' ')
-YUTONES = 'ǖ ǘ ǚ ǜ'.split(' ')
+ATONES = u'ā á ǎ à'.split(' ')
+OTONES = u'ō ó ǒ ò'.split(' ')
+ETONES = u'ē é ě è'.split(' ')
+ITONES = u'ī í ǐ ì'.split(' ')
+UTONES = u'ū ú ǔ ù'.split(' ')
+YUTONES = u'ǖ ǘ ǚ ǜ'.split(' ')
 
 TONE_ANNOTATION_REPLACEMENTS = dict(
     a=ATONES,
@@ -130,15 +130,15 @@ def getPinyinStr(initial, final, tone):
     @return tonated pinyin string
     '''
     if tone == 0:
-        return '{i}{f}'.format(i=initial, f=final)
+        return initial+final
 
-    if final == 'ü': 
+    if final.decode('utf-8') == u'ü': 
         key = 'yu'
-    elif final == 'üe': 
+    elif final.decode('utf-8') == u'üe': 
         key = 'yue'
-    elif final == 'üan': 
+    elif final.decode('utf-8') == u'üan': 
         key = 'yuan'
-    elif final == 'in': 
+    elif final.decode('utf-8') == 'in': 
         key = 'yin'
     else: 
         key = final
@@ -150,17 +150,17 @@ def getPinyinStr(initial, final, tone):
         else:
             tonatedFinal.append(c)
     f = ''.join(tonatedFinal)
-    return '{i}{f}'.format(i=initial, f=f)
+    return initial+f
 
 # TODO: to accomplish this
 COMPONENTS = (
-    ('艹', '草字头'),
-    ('木', '木字旁'),
-    ('', '独体字'),
-    ('冫', '两点水儿'),
-    ('冖', '秃宝盖儿'),
-    ('讠', '言字旁儿'),
-    ('厂', '偏厂儿'),
+    (u'艹', u'草字头'),
+    (u'木', u'木字旁'),
+    (u'', u'独体字'),
+    (u'冫', u'两点水儿'),
+    (u'冖', u'秃宝盖儿'),
+    (u'讠', u'言字旁儿'),
+    (u'厂', u'偏厂儿'),
 )
 
 # final = '''a o e i u ü ia ua uo ie üe ai uai ei ui ao iao ou iu an ian uan üan en in un ün ang iang uang eng ing ong'''

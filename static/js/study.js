@@ -203,11 +203,6 @@ $(document).ready(function() {
         });
     };
 
-    $("#button_load_history").click(function() {
-        initRevise();
-        return false;
-    });
-
     $("#button_add_to_recap_list").click(function() {
         if (currentMode_ === 'Revise') {
             recapList_.push(studyList_[studyIndex_]);
@@ -255,4 +250,12 @@ $(document).ready(function() {
     // initialise
     // bind Flashcard
     Flashcard.init($("#flashcard"));
+
+    // if /study/index.html, initRevise()
+    var url = window.location.href;
+    var suffix = "/study/";
+    if (url.indexOf(suffix, url.length - suffix.length) !== -1)
+    {
+        initRevise();
+    }
 });

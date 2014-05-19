@@ -21,7 +21,7 @@ def index(request):
 
 @login_required
 def learn_new(request):
-    return render_to_response('study/learnNew.html', 
+    return render_to_response('study/new.html', 
         context_instance=RequestContext(request))
 
 @login_required

@@ -3,7 +3,7 @@ from django.conf.urls import patterns, url
 
 urlpatterns = patterns('apps.study.views',
     url(r'^$', 'index'),
-    url(r'^learnNew/$', 'learn_new'),
+    url(r'^new/$', 'learn_new'),
     url(r'^recap/$', 'recap'),
     
     url(r'^api.html/$', 'api_index'),

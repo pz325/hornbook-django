@@ -1,6 +1,6 @@
 /* Move down content because we have a fixed navbar that is 50px tall */
 body {
-  padding-top: 15px;
+  padding-top: 30px;
 }
 
 .navbar{
@@ -41,14 +41,12 @@ body {
 {
     display: inline;
     font-size: 15em;
-    font-family: "DFKai-SB", "BiauKai", "STKaiti";
+    font-family: "SimHei";
     color: #444444;
     margin-right: 10px;
-    border-radius: 10px;
-    -webkit-box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
-    box-shadow: 3px 3px 7px rgba(0,0,0,0.3);
-    background-color: #C7EDDD;
-    line-height: 1.2;
+    /*border-radius: 10px;*/
+    /*background-color: #FFC0CB;*/
+    /*line-height: 1.2;*/
 }
 
 .prettyprint
