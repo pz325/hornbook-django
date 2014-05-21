@@ -92,6 +92,11 @@ $(document).ready(function() {
     var initStudyNew = function() {
         resetUI();
 
+        // get 3 of most common 500
+        if ($("#checkbox_add500").prop('checked', true))
+        {
+            console.log("get 3 of most common 500");
+        }
         // get new studies
         var today_study = $("#input_today_study").val().trim();
         console.log("today study: ", today_study);
@@ -111,7 +116,7 @@ $(document).ready(function() {
     $("#button_save_to_server").click(function() {
         if (currentMode_ === "StudyNew") {
             console.log("new words:", studyList_);
-            StudyAPI.newStudy(studyList_.join(" "))
+            StudyAPI.saveNewStudy(studyList_.join(" "))
             .done(function(data, textStatus, jqXHR) {
                 Util.notifySuccess("New study saved");
             })
@@ -165,8 +170,8 @@ $(document).ready(function() {
      */
     var saveRevise = function() {
         $.when(
-            StudyAPI.reviseStudy(graspedList_.join(" ")),
-            StudyAPI.newStudy(recapList_.join(" "))
+            StudyAPI.saveRevise(graspedList_.join(" ")),
+            StudyAPI.saveNewStudy(recapList_.join(" "))
         ).done(function(r1, r2) {
             Util.notifySuccess("Revise saved");
         })
@@ -253,6 +258,7 @@ $(document).ready(function() {
 
     // if /study/index.html, initRevise()
     var url = window.location.href;
+    console.log(url);
     var suffix = "/study/";
     if (url.indexOf(suffix, url.length - suffix.length) !== -1)
     {

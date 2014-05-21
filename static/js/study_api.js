@@ -1,5 +1,5 @@
-var API_NEW_STUDY_URL = "/study/new_study/";   // POST url with '/'' at the end
-var API_REVISE_STUDY_URL = "/study/revise_study/";   // POST url with '/'' at the end
+var API_NEW_STUDY_URL = "/study/save_new_study/";   // POST url with '/'' at the end
+var API_REVISE_STUDY_URL = "/study/save_revise/";   // POST url with '/'' at the end
 var API_ADD_GRASPED_URL = "/study/add_grasped/";
 var API_GET_STUDY_BWTEEN_URL = "/study/get_study_between";
 var API_GET_ALL_URL = "/study/get_all";
@@ -60,7 +60,7 @@ var StudyAPI = (function() {
      * @param vocabularies "u0x8fd9 u0x90a3 u0x6765"
      * @return $.ajax()
      */
-    var newStudy = function(vocabularies) {
+    var saveNewStudy = function(vocabularies) {
         return $.ajax({
             type: "POST",
             url: API_NEW_STUDY_URL,
@@ -74,7 +74,7 @@ var StudyAPI = (function() {
      * @param vocabularies "u0x8fd9 u0x90a3 u0x6765"
      * @return $.ajax()
      */
-    var reviseStudy = function(vocabularies) {
+    var saveRevise = function(vocabularies) {
         return $.ajax({
             type: "POST",
             url: API_REVISE_STUDY_URL,
@@ -106,8 +106,8 @@ var StudyAPI = (function() {
 
     return {
         getStudyBetween: getStudyBetween,
-        newStudy: newStudy,
-        reviseStudy: reviseStudy,
+        saveNewStudy: saveNewStudy,
+        saveRevise: saveRevise,
         getAll: getAll,
         getStudyIntelligent: getStudyIntelligent,
         addGrasped: addGrasped,

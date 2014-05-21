@@ -35,7 +35,7 @@ def api_index(request):
         context_instance=RequestContext(request))
 
 @login_required
-def new_study(request):
+def save_new_study(request):
     '''
     HTTP POST /study/new_study
     Data
@@ -101,7 +101,7 @@ def add_grasped(request):
 
 
 @login_required
-def revise_study(request):
+def save_revise(request):
     '''
     HTTP POST /study/revise_study
     Data
@@ -196,6 +196,29 @@ def get_statistics(request):
         num_grasped=len(grasped_v))
 
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
+from apps.hornbook_api.models import MostCommonCharacter
+@login_required
+def get_new_from_500(request):
+    '''
+    HTTP GET /study/get_new_from_500?num=3
+    Return
+        [u0x2345, u0x1111, ...]
+    '''
+    ret = []
+    if 'num' in request.GET:
+        num = int(request.GET['num'])   
+    else:
+        num = 3
+    common500 = [ch for (ch, f) in MostCommonCharacter.get_all()]
+
+    for v in StudyHistory.objects.filter(user=request.user):
+        if v.vocabulary in common500:
+            common500.remove(v.vocabulary)
+    ret = common500[:num]
+
+    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
 
 def get_history_type(study_date, revise_date):
     '''
