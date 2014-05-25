@@ -5,6 +5,8 @@ var API_GET_STUDY_BWTEEN_URL = "/study/get_study_between";
 var API_GET_ALL_URL = "/study/get_all";
 var API_GET_STUDY_INTELLIGENT_URL = "/study/get_study_intelligent";
 var API_GET_STATISTICS_URL = "/study/get_statistics";
+var API_GET_NEW_FROM_500_URL = "/study/get_new_from_500";
+
 
 /**
  * wrapper of study api
@@ -104,6 +106,20 @@ var StudyAPI = (function() {
         });
     };
 
+    /**
+     * @ return $.ajax()
+     */
+    var getNewFrom500 = function(num) {
+        console.log("getNewFrom500");
+        return $.ajax({
+            type: "GET",
+            url: API_GET_NEW_FROM_500_URL,
+            data: {
+                num: num
+            }
+        });
+    }
+
     return {
         getStudyBetween: getStudyBetween,
         saveNewStudy: saveNewStudy,
@@ -111,7 +127,8 @@ var StudyAPI = (function() {
         getAll: getAll,
         getStudyIntelligent: getStudyIntelligent,
         addGrasped: addGrasped,
-        getStatistics: getStatistics
+        getStatistics: getStatistics,
+        getNewFrom500: getNewFrom500
     };
 
 })();

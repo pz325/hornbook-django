@@ -92,20 +92,30 @@ $(document).ready(function() {
     var initStudyNew = function() {
         resetUI();
 
-        // get 3 of most common 500
-        if ($("#checkbox_add500").prop('checked', true))
-        {
-            console.log("get 3 of most common 500");
-        }
-        // get new studies
+        studyList_ = [];
         var today_study = $("#input_today_study").val().trim();
-        console.log("today study: ", today_study);
-        studyList_ = today_study.split(" ");
-
+        if (today_study.length > 0)
+            studyList_ = studyList_.concat(today_study.split(" "));
+        console.log("User adds new:", studyList_);
         clickCallback_ = studyNewClickCallback;        
         currentMode_ = "StudyNew";
 
-        initUI();
+        // get 3 of most common 500
+        console.log('Add 3 of most 500', $("#checkbox_add500").is(':checked'));
+        if ($("#checkbox_add500").is(':checked'))
+        {
+            StudyAPI.getNewFrom500(3)
+            .done(function(data, textStatus, jqXHR) {
+                var new3 = JSON.parse(data);
+                console.log('Most 500: ', new3);
+                studyList_ = studyList_.concat(new3);
+                initUI();
+            });
+        }
+        else
+        {// get new studies
+            initUI();
+        }
     };
 
     $("#button_add_new").click(function() {
