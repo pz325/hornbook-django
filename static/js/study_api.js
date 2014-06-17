@@ -67,7 +67,7 @@ var StudyAPI = (function() {
             type: "POST",
             url: API_NEW_STUDY_URL,
             data: {
-                vocabularies:vocabularies
+                hanzi:vocabularies
             }
         });
     };

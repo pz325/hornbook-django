@@ -12,7 +12,7 @@ urlpatterns = patterns('',
     # ('^$', 'django.views.generic.simple.direct_to_template',
     #  {'template': 'home.html'}),
 
-    url(r'^$', 'apps.hornbook_landing.views.index'),
+    url(r'^$', 'apps.dashboard.views.index'),
 
     # log in/out
     url(r'^accounts/login/$', 'django.contrib.auth.views.login', 
@@ -25,6 +25,5 @@ urlpatterns = patterns('',
     url(r'^grading_test/', include('apps.grading_test.urls')),
     url(r'^study/', include('apps.study.urls')),
     url(r'^dashboard/', include('apps.dashboard.urls')),
-    url(r'^leitner/', include('apps.leitner.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

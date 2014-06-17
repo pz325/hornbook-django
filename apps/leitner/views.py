@@ -49,13 +49,18 @@ def get(request):
     HTTP GET /leitner/get
     Return [u0x2345, u0x1111, ...]
     '''
-    session_count = SessionCount.objects.get(user=request.user)
-    session_deck_id = session_count['count'] % 10;
+    try:
+        session_count = SessionCount.objects.get(user=request.user)
+    except ObjectDoesNotExist:
+        today = datetime.datetime.now()
+        session_count = SessionCount(user=request.user, count=0, timestamp=today)
+        session_count.save()
+    session_deck_id = session_count.count % 10;
 
     current_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='C')]
-    level1_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(session_deck_id), level=2)]
-    level2_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-2)%10), level=3)]
-    level3_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-5)%10), level=4)]
+    level1_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(session_deck_id), level=1)]
+    level2_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-2)%10), level=2)]
+    level3_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-5)%10), level=3)]
     level4_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+1)%10), level=4)]
     ret = current_deck + level1_deck + level2_deck + level3_deck + level4_deck
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
@@ -85,7 +90,7 @@ def update(request):
     '''
     recall_results = json.loads(request.POST['recall_results'])
     session_count = SessionCount.objects.get(user=request.user)
-    session_deck_id = str(session_count['count'] % 10);
+    session_deck_id = str(session_count.count%10);
     today = datetime.datetime.now()
 
     for result in recall_results:
@@ -109,8 +114,8 @@ def update(request):
             pass
     
     # update session count
-    session_count['count'] += 1
-    session_count['timestamp'] = today
+    session_count.count += 1
+    session_count.timestamp = today
     session_count.save()
     return
 
@@ -118,7 +123,7 @@ def update(request):
 from apps.study.models import StudyHistory
 def importFromStudyHistory():
     for h in StudyHistory.objects.all():
-        q = Leitner.objects.filter(hanzi=h.vocabulary)
+        q = Leitner.objects.filter(hanzi=h.vocabulary, user=h.user)
         if not q:
             if h.history_type == 'N':
                 # Deck Current, Level 0
