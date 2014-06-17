@@ -25,5 +25,6 @@ urlpatterns = patterns('',
     url(r'^grading_test/', include('apps.grading_test.urls')),
     url(r'^study/', include('apps.study.urls')),
     url(r'^dashboard/', include('apps.dashboard.urls')),
+    url(r'^leitner/', include('apps.leitner.urls')),
     url(r'^admin/', include(admin.site.urls)),
 )

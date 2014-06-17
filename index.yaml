@@ -43,6 +43,11 @@ indexes:
   - name: __key__
     direction: desc
 
+- kind: leitner_leitner
+  properties:
+  - name: __key__
+    direction: desc
+
 - kind: study_studyhistory
   properties:
   - name: user_id

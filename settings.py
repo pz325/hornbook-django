@@ -34,6 +34,7 @@ INSTALLED_APPS = (
     'apps.hornbook_landing',
     'apps.study',
     'apps.dashboard',
+    'apps.leitner',
 
     # djangoappengine should come last, so it can override a few manage.py commands
     'djangoappengine',
