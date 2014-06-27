@@ -12,6 +12,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 import datetime
 import json
 import logging
+import random
 
 from models import Leitner
 from models import SessionCount
@@ -63,7 +64,9 @@ def get(request):
     level2_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-2)%10), level=2)]
     level3_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-5)%10), level=3)]
     level4_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+1)%10), level=4)]
-    ret = current_deck + level1_deck + level2_deck + level3_deck + level4_deck
+    retired_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='R')]
+    random.shuffle(retired_deck)
+    ret = current_deck + level1_deck + level2_deck + level3_deck + level4_deck + retired_deck[15:]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 @login_required
@@ -105,9 +108,12 @@ def update(request):
             # update level
             h.level += 1
             # move from Session Deck to Deck Retired
-            if h.level >= 5: 
-                h.level = 5
+            if h.level == 5: 
                 h.deck = 'R'
+            # move from Deck Retired to Deck Permanent
+            if h.level >= 6:
+                h.level = 6
+                h.deck = 'P'
             h.save()
         except ObjectDoesNotExist:
             logging.info('ObjectDoesNotExist')
