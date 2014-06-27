@@ -66,7 +66,7 @@ def get(request):
     level4_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+1)%10), level=4)]
     retired_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='R')]
     random.shuffle(retired_deck)
-    ret = current_deck + level1_deck + level2_deck + level3_deck + level4_deck + retired_deck[15:]
+    ret = current_deck + level1_deck + level2_deck + level3_deck + level4_deck + retired_deck[:15]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 @login_required
