@@ -15,7 +15,8 @@ import logging
 
 from django.contrib.auth.models import User
 from models import UserVocabularyRecord
-from apps.study.models import StudyHistory
+from apps.leitner.models import Leitner
+
 
 @login_required
 def index(request):
@@ -42,26 +43,19 @@ def get_statistics(request):
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 def get_study_history_statistics(user):
-    new_v = [h.vocabulary for h in StudyHistory.objects.filter(user=user, history_type='N')]
-    studying_v = [h.vocabulary for h in StudyHistory.objects.filter(user=user, history_type='S')]
-    grasped_v = [h.vocabulary for h in StudyHistory.objects.filter(user=user, history_type='G')]
-    ret = dict(num_new=len(new_v),
-        num_studying=len(studying_v),
-        num_grasped=len(grasped_v))
-    return ret
+    num_new = Leitner.objects.filter(user=user, deck='C').count()
+    num_study = Leitner.objects.filter(user=user, level__gt=0, level__lt=5).count()
+    num_grasped = Leitner.objects.filter(user=user, level__gt=4).count()
 
+    ret = dict(num_new=num_new,
+        num_studying=num_study,
+        num_grasped=num_grasped)
+    return ret
 
 from apps.hornbook_api.models import MostCommonCharacter
 
 def get_most_common_statistics(user):
-    v = []
-    for h in StudyHistory.objects.filter(user=user):
-        if len(h.vocabulary) > 1:
-            for c in h.vocabulary:
-                v.append(c)
-        else:
-            v.append(h.vocabulary)
-    
+    v = [h.hanzi for h in Leitner.objects.filter(user=user)]
     v = set(v)
     common = [c for (c, f) in MostCommonCharacter.get_all()]
     in_common = 0
