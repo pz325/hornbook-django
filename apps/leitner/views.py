@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.template import RequestContext
 from django.http import HttpResponse
 from django.core.serializers.json import DjangoJSONEncoder
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 import datetime
 import json
@@ -56,6 +56,7 @@ def get(request):
         session_count = SessionCount(user=request.user, count=0, timestamp=today)
         session_count.save()
     session_deck_id = session_count.count % 10;
+    logging.info('sesson count: {session_count}'.format(session_count=session_count.count))
 
     current_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='C')]
     level1_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(session_deck_id), level=1)]
@@ -81,34 +82,49 @@ def update(request):
     HTTP POST /Leitner/update
     Data
         recall_results: 
-            a JSON array
-            [
-                {'hanzi': u0x2345, 'result': true},
-                {'hanzi': u0x1111, 'result': false},
-                ...
-            ]
+            a JSON object
+            {
+                "grasped": "u0x2345 u0x1111",
+                "unknown": "u0x2345 u0x1111"
+            }
     '''
     recall_results = json.loads(request.POST['recall_results'])
     session_count = SessionCount.objects.get(user=request.user)
+    logging.info('sesson count {session_count}'.format(session_count=session_count.count))
     session_deck_id = str(session_count.count%10);
     today = datetime.datetime.now()
 
-    for result in recall_results:
+    grasped_recall = recall_results['grasped'].split(' ')
+    for hanzi in grasped_recall:
+        logging.info('grasped'), logging.info(hanzi)
         try:
-            h = Leitner.objects.get(user=request.user, hanzi=result['hanzi'])
+            h = Leitner.objects.get(user=request.user, hanzi=hanzi)
             h.last_study_date = today
-            if result['result'] == 'true':
-                # move from Deck Current to Session Deck
-                if h.deck == 'C': h.deck = session_deck_id
-                # update level
-                h.level += 1
-                # move from Session Deck to Deck Retired
-                if h.level == 5: h.deck = 'R'
-            else:
-                # move to Deck Current, set level to 0
-                h.deck = 'C'
-                h.level = 0
-                h.forget_times += 1
+            # move from Deck Current to Session Deck
+            if h.deck == 'C': h.deck = session_deck_id
+            # update level
+            h.level += 1
+            # move from Session Deck to Deck Retired
+            if h.level >= 5: 
+                h.level = 5
+                h.deck = 'R'
+            h.save()
+        except ObjectDoesNotExist:
+            logging.info('ObjectDoesNotExist')
+            pass
+        except MultipleObjectsReturned:
+            logging.info('MultipleObjectsReturned')
+            pass
+
+    unknown_recall = recall_results['unknown'].split(' ')
+    for hanzi in unknown_recall:
+        logging.info('unknown'), logging.info(hanzi)
+        try:
+            h = Leitner.objects.get(user=request.user, hanzi=hanzi)
+            # move to Deck Current, set level to 0
+            h.deck = 'C'
+            h.level = 0
+            h.forget_times += 1
             h.save()
         except ObjectDoesNotExist:
             pass
@@ -118,7 +134,6 @@ def update(request):
     session_count.timestamp = today
     session_count.save()
     return
-
 
 from apps.study.models import StudyHistory
 def importFromStudyHistory():

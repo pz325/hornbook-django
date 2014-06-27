@@ -47,66 +47,21 @@ def save_new_study(request):
     apps.leitner.views.add(request)
     return HttpResponse()
 
-@login_required
-def add_grasped(request):
-    '''
-    HTTP POST /study/add_grasped
-    Data
-        hanzi e.g. "u0x2345 u0x1111 u0x1111u0x1234"
-    Return
-        [<StudyHistory object>, <StudyHistory object>]
-    '''
-    vocabularies = request.POST['vocabularies'].split(' ')
-    ret = []
-    if vocabularies == '':
-        return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
-    study_date = datetime.datetime.now()
-    revise_date = datetime.datetime.now() + datetime.timedelta(days=5);
-    # add new StudyHistory
-    for v in vocabularies:
-        if v == '':
-            continue
-        try:
-            study_history = StudyHistory.objects.get(user=request.user, vocabulary=v)
-        except ObjectDoesNotExist:
-            study_history = StudyHistory(user=request.user, vocabulary=v, study_date=study_date, revise_date=revise_date, history_type='G', studied_times=1)
-            study_history.save()
-        
-        ret.append(study_history.getJSONObject())
-
-    update_user_vocabulary_record(request.user)
-    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
-
 
 @login_required
-def save_revise(request):
+def update(request):
     '''
-    HTTP POST /study/revise_study
+    HTTP POST /study/update
     Data
-        vocabularies e.g. "u0x2345 u0x1111 u0x1111u0x1234"
-    Return
-        [<StudyHistory object>, <StudyHistory object>]
+        recall_results: 
+            a JSON object
+            {
+                "grasped": "u0x2345 u0x1111",
+                "unknown": "u0x2345 u0x1111"
+            }
     '''
-    vocabularies = request.POST['vocabularies'].split(' ')
-    revise_date = datetime.datetime.now()
-    ret = []
-    if vocabularies == '':
-        return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
-    # update StudyHistory
-    for v in vocabularies:
-        if v == '':
-            continue
-        try:
-            study_history = StudyHistory.objects.get(user=request.user, vocabulary=v)
-            study_history.revise_date = revise_date
-            study_history.history_type = get_history_type(study_history.study_date, study_history.revise_date)
-            study_history.save()
-            ret.append(study_history.getJSONObject())
-        except ObjectDoesNotExist:
-            continue
-
-    update_user_vocabulary_record(request.user)
-    return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+    apps.leitner.views.update(request)
+    return HttpResponse();
 
 @login_required
 def get_study_intelligent(request):
@@ -116,7 +71,6 @@ def get_study_intelligent(request):
     Return [u0x2345, u0x1111, ...]
     '''
     return apps.leitner.views.get(request)
-
 
 @login_required
 def get_statistics(request):

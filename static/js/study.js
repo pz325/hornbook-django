@@ -179,9 +179,12 @@ $(document).ready(function() {
      * Start Revise mode if ncessary
      */
     var saveRevise = function() {
+        var recall_results = {
+            "grasped": graspedList_.join(" "),
+            "unknown": recapList_.join(" ")
+        };
         $.when(
-            StudyAPI.saveRevise(graspedList_.join(" ")),
-            StudyAPI.saveNewStudy(recapList_.join(" "))
+            StudyAPI.update(JSON.stringify(recall_results))
         ).done(function(r1, r2) {
             Util.notifySuccess("Revise saved");
         })
