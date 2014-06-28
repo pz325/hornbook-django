@@ -40,12 +40,12 @@ FINALS = (
     ('e', 'e'),
     ('i', 'i'),
     ('u', 'u'),
-    (u'ü', u'ü'),
+    ('v', u'ü'),
     ('ia', 'ia'),
     ('ua', 'ua'),
     ('uo', 'uo'),
     ('ie', 'ie'),
-    (u'üe', u'üe'),
+    ('ve', u'üe'),
     ('ai', 'ai'),
     ('uai', 'uai'),
     ('ei', 'ei'),
@@ -57,11 +57,11 @@ FINALS = (
     ('an', 'an'),
     ('ian', 'ian'),
     ('uan', 'uan'),
-    (u'üan', u'üan'),
+    ('van', u'üan'),
     ('en', 'en'),
     ('in', 'in'),
     ('un', 'un'),
-    (u'ün', u'ün'),
+    ('vn', u'ün'),
     ('anɡ', 'anɡ'),
     ('ianɡ', 'ianɡ'),
     ('uanɡ', 'uanɡ'),
@@ -70,6 +70,42 @@ FINALS = (
     ('onɡ', 'onɡ')
 )
 
+FINALSTR = {
+    'a': 'a',
+    'o': 'o',
+    'e': 'e',
+    'i': 'i',
+    'u': 'u',
+    'v': u'ü',
+    'ia': 'ia',
+    'ua': 'ua',
+    'uo': 'uo',
+    'ie': 'ie',
+    've': u'üe',
+    'ai': 'ai',
+    'uai': 'uai',
+    'ei': 'ei',
+    'ui': 'ui',
+    'ao': 'ao',
+    'iao': 'iao',
+    'ou': 'ou',
+    'iu': 'iu',
+    'an': 'an',
+    'ian': 'ian',
+    'uan': 'uan',
+    'van': u'üan',
+    'en': 'en',
+    'in': 'in',
+    'un': 'un',
+    'vn': u'ün',
+    'anɡ': 'anɡ',
+    'ianɡ': 'ianɡ',
+    'uanɡ': 'uanɡ',
+    'enɡ': 'enɡ',
+    'ing': 'ing',
+    'onɡ': 'onɡ'
+}
+
 ATONES = u'ā á ǎ à'.split(' ')
 OTONES = u'ō ó ǒ ò'.split(' ')
 ETONES = u'ē é ě è'.split(' ')
@@ -77,72 +113,64 @@ ITONES = u'ī í ǐ ì'.split(' ')
 UTONES = u'ū ú ǔ ù'.split(' ')
 YUTONES = u'ǖ ǘ ǚ ǜ'.split(' ')
 
-TONE_ANNOTATION_REPLACEMENTS = dict(
-    a=ATONES,
-    o=OTONES,
-    e=ETONES,
-    i=ITONES,
-    u=UTONES,
-    yu=YUTONES)
+TONE_ANNOTATION_REPLACEMENTS = {
+    'a': 'ATONES',
+    'o': 'OTONES',
+    'e': 'ETONES',
+    'i': 'ITONES',
+    'u': 'UTONES',
+    'v': 'YUTONES'
+}
 
-TONE_ANNOTATIONS = dict(
-     a='a',
-     o='o',
-     e='e',
-     i='i',
-     u='u',
-     yu='yu', # ü
-     ia='a',
-     ua='a',
-     uo='o',
-     ie='e',
-     yue='e', # üe
-     ai='a',
-     uai='a',
-     ei='e',
-     ui='i',
-     ao='a',
-     iao='a',
-     ou='o',
-     iu='u',
-     an='a',
-     ian='a',
-     uan='a',
-     yuan='a', # üan
-     en='e',
-     yin='i', # in
-     un='u', 
-     ang='a',
-     iang='a',
-     uang='a',
-     eng='e',
-     ing='i',
-     ong='o',
-)
+TONE_ANNOTATIONS = {
+     'a': 'a',
+     'o': 'o',
+     'e': 'e',
+     'i': 'i',
+     'u': 'u',
+     'v': 'v', # ü
+     'ia': 'a',
+     'ua': 'a',
+     'uo': 'o',
+     'ie': 'e',
+     've': 'e', # üe
+     'ai': 'a',
+     'uai': 'a',
+     'ei': 'e',
+     'ui': 'i',
+     'ao': 'a',
+     'iao': 'a',
+     'ou': 'o',
+     'iu': 'u',
+     'an': 'a',
+     'ian': 'a',
+     'uan': 'a',
+     'van': 'a', # üan
+     'en': 'e',
+     'in': 'i', # in
+     'un': 'u', 
+     'ang': 'a',
+     'iang': 'a',
+     'uang': 'a',
+     'eng': 'e',
+     'ing': 'i',
+     'ong': 'o',
+}
 
 def getPinyinStr(initial, final, tone):
     '''
     Generate tonated pinyin string
     e.g. initial = b, final = a, tone = 3, pinyinStr = bǎ
     @param initial
-    @param final ü input as it is
+    @param final ü input as 'v'
     @tone
     @return tonated pinyin string
     '''
+    finalStr = FINALSTR[final]
     if tone == 0:
-        return initial+final
-
-    if final.decode('utf-8') == u'ü': 
-        key = 'yu'
-    elif final.decode('utf-8') == u'üe': 
-        key = 'yue'
-    elif final.decode('utf-8') == u'üan': 
-        key = 'yuan'
-    elif final.decode('utf-8') == 'in': 
-        key = 'yin'
-    else: 
-        key = final
-    replace = TONE_ANNOTATIONS[key]
+        return initial+finalStr
+    
+    replace = TONE_ANNOTATIONS[final]
     tonatedFinal = []
     for c in final:
         if c == replace:
