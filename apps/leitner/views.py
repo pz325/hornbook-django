@@ -26,7 +26,6 @@ def add(request):
         hanzi e.g. "u0x2345 u0x1111"
     '''
     hanziList = request.POST['hanzi'].split(' ')
-    today = datetime.datetime.now()
     if hanziList == '':
         return
     for hanzi in hanziList:
@@ -34,13 +33,12 @@ def add(request):
             continue
         try:
             h = Leitner.objects.get(user=request.user, hanzi=hanzi)
-            h.last_study_date = today
             h.forget_times += 1
             h.deck = 'C'   # Deck Current
             h.level = 0    # Level 1
             h.save()
         except ObjectDoesNotExist:
-            h = Leitner(user=request.user, hanzi=hanzi, last_study_date=today)
+            h = Leitner(user=request.user, hanzi=hanzi)
             h.save()
     return
 
@@ -95,14 +93,12 @@ def update(request):
     session_count = SessionCount.objects.get(user=request.user)
     logging.info('sesson count {session_count}'.format(session_count=session_count.count))
     session_deck_id = str(session_count.count%10);
-    today = datetime.datetime.now()
 
     grasped_recall = recall_results['grasped'].split(' ')
     for hanzi in grasped_recall:
         logging.info('grasped'), logging.info(hanzi)
         try:
             h = Leitner.objects.get(user=request.user, hanzi=hanzi)
-            h.last_study_date = today
             # move from Deck Current to Session Deck
             if h.deck == 'C': h.deck = session_deck_id
             # update level
@@ -137,7 +133,6 @@ def update(request):
     
     # update session count
     session_count.count += 1
-    session_count.timestamp = today
     session_count.save()
     return
 

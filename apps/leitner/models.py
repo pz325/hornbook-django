@@ -6,7 +6,7 @@ from django.contrib import admin
 class SessionCount(models.Model):
     user = models.ForeignKey(User, editable=False)
     count = models.PositiveSmallIntegerField(default=0)
-    timestamp = models.DateTimeField()
+    timestamp = models.DateTimeField(auto_now=True)
 
 LEITER_DECK_TYPE = (
     ('C', 'Current'),
@@ -45,7 +45,7 @@ class Leitner(models.Model):
     deck = models.CharField(max_length=1, choices=LEITER_DECK_TYPE, default='C')
     level = models.PositiveSmallIntegerField(choices=LEITER_LEVEL, default=0)
     forget_times = models.PositiveSmallIntegerField(default=0)
-    last_study_date = models.DateTimeField();
+    last_study_date = models.DateTimeField(auto_now=True);
 
 admin.site.register(Leitner)
 admin.site.register(SessionCount)
