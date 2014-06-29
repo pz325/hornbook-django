@@ -40,9 +40,9 @@ class Leitner(models.Model):
         (6, 'Level 6'),
         )
     user = models.ForeignKey(User, editable=False)
-    hanzi = models.CharField(max_length=10)
-    deck = models.CharField(max_length=1, choices=DECK_TYPE, default='C')
-    level = models.PositiveSmallIntegerField(choices=LEVEL, default=0)
+    hanzi = models.CharField(max_length=10, db_index=True)
+    deck = models.CharField(max_length=1, choices=DECK_TYPE, default='C', db_index=True)
+    level = models.PositiveSmallIntegerField(choices=LEVEL, default=0, db_index=True)
     forget_times = models.PositiveSmallIntegerField(default=0)
     last_study_date = models.DateTimeField(auto_now=True);
 
