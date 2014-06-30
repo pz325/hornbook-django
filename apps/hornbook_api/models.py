@@ -1,5 +1,6 @@
 
 from django.db import models
+from django.db import IntegrityError
 from django.core.cache import cache
 from django.contrib import admin
 import os.path
@@ -9,53 +10,46 @@ from trie import Trie
 import hanzi
 
 class Pinyin(models.Model):
-    initial = models.CharField(max_length=4, choices=hanzi.INITIALS)
-    final = models.CharField(max_length=20, choices=hanzi.FINALS)
+    initial = models.CharField(max_length=3, choices=hanzi.INITIALS)
+    final = models.CharField(max_length=5, choices=hanzi.FINALS)
     tone = models.PositiveSmallIntegerField(default=0, choices=hanzi.TONES)
-    pinyin_str = models.CharField(max_length=20, blank=True) # tone annotated pinyin str
-    signature = models.CharField(max_length=20, editable=False) # pinyin signature
+    pinyin_str = models.CharField(max_length=20, blank=True, editabl=False) # tone annotated pinyin str
+    signature = models.SlugField(max_length=20, editable=False, unique=True) # pinyin signature
     
     def save(self, *args, **kwargs):
         '''
         extends default save() to create pinyin_str
         '''
         signature = self.initial+self.final+str(self.tone)
-        if Pinyin.objects.filter(signature=signature).count() == 0:
-            self.signature = signature
+        try:
+            self.signature = signature;
             self.pinyin_str = hanzi.getPinyinStr(self.initial, self.final, self.tone)
             super(Pinyin, self).save(*args, **kwargs)
+        except IntegrityError:
+            pass
 
     def __str__(self):
         return self.pinyin_str
 
 class Tag(models.Model):
-    tag = models.CharField(max_length=200)
+    tag = models.SlugField(max_length=200, unique=True)
 
     def __str__(self):
         return str(self.tag)
 
-class Vocabulary(models.Model):
+class Hanzi(models.Model):
     '''
-    Hanzi vocabulary model
+    Hanzi characer model
     '''
-    vocabulary = models.CharField(max_length=10)
+    hanzi = models.CharField(max_length=3, db_index=True, unique=True, blank=False, null=False)
     numStrokes = models.PositiveSmallIntegerField(default=0)
-    component = models.CharField(max_length=4, choices=hanzi.COMPONENTS)
+    component = models.CharField(max_length=3, choices=hanzi.COMPONENTS)
     pinyins = models.ManyToManyField(Pinyin)  # handle multiple pronounciation
     tags = models.ManyToManyField(Tag)
 
-    # @classmethod
-    # def create(vocabulary):
-    #     return cls(name=name, email=email)
-
-class TaggedVocabulary(models.Model):
-    tag = models.ForeignKey(Tag)
-    vocabularies = models.ManyToManyField(Vocabulary)
-
 admin.site.register(Pinyin)
 admin.site.register(Tag)
-admin.site.register(Vocabulary)
-admin.site.register(TaggedVocabulary)
+admin.site.register(Hanzi)
 
 
 FILE_MOST_COMMON_CHARACTERS = '/../../data/most_common_chinese_characters.txt'
@@ -114,4 +108,3 @@ class MostCommonWord():
         if MostCommonWord.trie is None:
             MostCommonWord.generate_trie()
         return MostCommonWord.trie.enumerate(ref_character)
-
