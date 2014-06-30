@@ -7,13 +7,13 @@ import os.path
 import random
 from trie import Trie
 
-import hanzi
+import hanzi_base
 
 class Pinyin(models.Model):
-    initial = models.CharField(max_length=3, choices=hanzi.INITIALS)
-    final = models.CharField(max_length=5, choices=hanzi.FINALS)
-    tone = models.PositiveSmallIntegerField(default=0, choices=hanzi.TONES)
-    pinyin_str = models.CharField(max_length=20, blank=True, editabl=False) # tone annotated pinyin str
+    initial = models.CharField(max_length=3, choices=hanzi_base.INITIALS)
+    final = models.CharField(max_length=5, choices=hanzi_base.FINALS)
+    tone = models.PositiveSmallIntegerField(default=0, choices=hanzi_base.TONES)
+    pinyin_str = models.CharField(max_length=20, blank=True, editable=False) # tone annotated pinyin str
     signature = models.SlugField(max_length=20, editable=False, unique=True) # pinyin signature
     
     def save(self, *args, **kwargs):
@@ -23,7 +23,7 @@ class Pinyin(models.Model):
         signature = self.initial+self.final+str(self.tone)
         try:
             self.signature = signature;
-            self.pinyin_str = hanzi.getPinyinStr(self.initial, self.final, self.tone)
+            self.pinyin_str = hanzi_base.getPinyinStr(self.initial, self.final, self.tone)
             super(Pinyin, self).save(*args, **kwargs)
         except IntegrityError:
             pass
@@ -43,7 +43,7 @@ class Hanzi(models.Model):
     '''
     hanzi = models.CharField(max_length=3, db_index=True, unique=True, blank=False, null=False)
     numStrokes = models.PositiveSmallIntegerField(default=0)
-    component = models.CharField(max_length=3, choices=hanzi.COMPONENTS)
+    radix = models.CharField(max_length=3, choices=hanzi_base.RADIX)
     pinyins = models.ManyToManyField(Pinyin)  # handle multiple pronounciation
     tags = models.ManyToManyField(Tag)
 

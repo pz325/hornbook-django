@@ -35,6 +35,7 @@ handlers:
 
 - url: /js
   static_dir: static/js
+  mime_type: text/plain
 
 - url: /api/index.html
   static_files: apps/hornbook_api/templates/hornbook_api/index.html
