@@ -43,6 +43,7 @@ class Hanzi(models.Model):
     '''
     hanzi = models.CharField(max_length=3, db_index=True, unique=True, blank=False, null=False)
     numStrokes = models.PositiveSmallIntegerField(default=0)
+    strokes = models.CharField(max_length=100)
     radix = models.CharField(max_length=3, choices=hanzi_base.RADIX)
     pinyins = models.ManyToManyField(Pinyin)  # handle multiple pronounciation
     tags = models.ManyToManyField(Tag)
@@ -50,7 +51,6 @@ class Hanzi(models.Model):
 admin.site.register(Pinyin)
 admin.site.register(Tag)
 admin.site.register(Hanzi)
-
 
 FILE_MOST_COMMON_CHARACTERS = '/../../data/most_common_chinese_characters.txt'
 FILE_MOST_COMMON_WORDS = '/../../data/most_common_chinese_words.txt'
@@ -108,3 +108,14 @@ class MostCommonWord():
         if MostCommonWord.trie is None:
             MostCommonWord.generate_trie()
         return MostCommonWord.trie.enumerate(ref_character)
+
+import codecs
+def importHanzi():
+    f = codecs.open('apps/hornbook_api/strokeorder.freq.txt', 'rb', 'utf-8')
+    for l in f.readlines():
+        tokens = l.split(' ')
+        numStrokes = int(tokens[1])
+        hanzi = tokens[3]
+        strokes = tokens[0]
+        h = Hanzi(hanzi=hanzi, numStrokes=numStrokes, strokes=strokes)
+        h.save()
