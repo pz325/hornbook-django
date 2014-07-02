@@ -63,13 +63,13 @@ def get_most_common_word(request):
     return HttpResponse(u_word)
 
 
-import hanzi
+import hanzi_base
 from models import Pinyin
 
 def generateAllPinyin():
-    for initial in hanzi.INITIAL:
-        for final in hanzi.FINAL:
-            for tone in hanzi.TONES:
+    for initial in hanzi_base.INITIAL:
+        for final in hanzi_base.FINAL:
+            for tone in hanzi_base.TONES:
                 print initial, final, tone
                 pinyin = Pinyin(
                     initial=initial, 
