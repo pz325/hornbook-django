@@ -110,6 +110,7 @@ class MostCommonWord():
         return MostCommonWord.trie.enumerate(ref_character)
 
 import codecs
+from django.core.exceptions import ObjectDoesNotExist
 def importHanzi():
     f = codecs.open('apps/hornbook_api/strokeorder.freq.txt', 'rb', 'utf-8')
     for l in f.readlines():
@@ -117,5 +118,8 @@ def importHanzi():
         numStrokes = int(tokens[1])
         hanzi = tokens[3]
         strokes = tokens[0]
-        h = Hanzi(hanzi=hanzi, numStrokes=numStrokes, strokes=strokes)
-        h.save()
+        try:
+            h = Hanzi.objects.get(hanzi=hanzi)
+        except ObjectDoesNotExist:
+            h = Hanzi(hanzi=hanzi, numStrokes=numStrokes, strokes=strokes)
+            h.save()
