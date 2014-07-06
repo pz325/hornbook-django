@@ -48,9 +48,9 @@ class Hanzi(models.Model):
     pinyins = models.ManyToManyField(Pinyin)  # handle multiple pronounciation
     tags = models.ManyToManyField(Tag)
 
-admin.site.register(Pinyin)
-admin.site.register(Tag)
-admin.site.register(Hanzi)
+# admin.site.register(Pinyin)
+# admin.site.register(Tag)
+# admin.site.register(Hanzi)
 
 FILE_MOST_COMMON_CHARACTERS = '/../../data/most_common_chinese_characters.txt'
 FILE_MOST_COMMON_WORDS = '/../../data/most_common_chinese_words.txt'
@@ -111,7 +111,7 @@ class MostCommonWord():
 
 import codecs
 from django.core.exceptions import ObjectDoesNotExist
-import apiproxy_errors
+from google.appengine.runtime import apiproxy_errors
 def importHanzi():
     f = codecs.open('apps/hornbook_api/strokeorder.freq.txt', 'rb', 'utf-8')
     numJumped, numAdded = 0, 0
