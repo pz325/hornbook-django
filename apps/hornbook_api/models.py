@@ -111,15 +111,23 @@ class MostCommonWord():
 
 import codecs
 from django.core.exceptions import ObjectDoesNotExist
+import apiproxy_errors
 def importHanzi():
     f = codecs.open('apps/hornbook_api/strokeorder.freq.txt', 'rb', 'utf-8')
-    for l in f.readlines():
-        tokens = l.split(' ')
-        numStrokes = int(tokens[1])
-        hanzi = tokens[3]
-        strokes = tokens[0]
-        try:
-            h = Hanzi.objects.get(hanzi=hanzi)
-        except ObjectDoesNotExist:
-            h = Hanzi(hanzi=hanzi, numStrokes=numStrokes, strokes=strokes)
-            h.save()
+    numJumped, numAdded = 0, 0
+    try:
+        for l in f.readlines():
+            tokens = l.split(' ')
+            numStrokes = int(tokens[1])
+            hanzi = tokens[3]
+            strokes = tokens[0]
+            try:
+                h = Hanzi.objects.get(hanzi=hanzi)
+                numJumped += 1
+            except ObjectDoesNotExist:
+                h = Hanzi(hanzi=hanzi, numStrokes=numStrokes, strokes=strokes)
+                h.save()
+                numAdded += 1
+    except apiproxy_errors.OverQuotaError:
+        print(numJumped)
+        print(numAdded)

@@ -38,11 +38,6 @@ indexes:
   - name: __key__
     direction: desc
 
-- kind: hornbook_api_vocabulary
-  properties:
-  - name: __key__
-    direction: desc
-
 - kind: leitner_leitner
   properties:
   - name: __key__
