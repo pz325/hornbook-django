@@ -55,16 +55,18 @@ def get(request):
         session_count = SessionCount(user=request.user, count=0, timestamp=today)
         session_count.save()
     session_deck_id = session_count.count % 10;
-    logging.info('sesson count: {session_count}'.format(session_count=session_count.count))
+    logging.info('sesson count: {session_count} -> session deck id: {session_deck_id}'.format(session_count=session_count.count, session_deck_id=session_deck_id))
 
     current_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='C')]
-    level1_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(session_deck_id), level=1)]
-    level2_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-2)%10), level=2)]
-    level3_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-5)%10), level=3)]
-    level4_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+1)%10), level=4)]
+    #level1_deck = []#[h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(session_deck_id), level=1)]
+    level1_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+2)%10), level=1)]
+    level2_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+5)%10), level=2)]
+    level3_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-1)%10), level=3)]
     retired_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='R')]
+    permanent_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='P')]
     random.shuffle(retired_deck)
-    ret = current_deck + level1_deck + level2_deck + level3_deck + level4_deck + retired_deck[:15]
+    random.shuffle(permanent_deck)
+    ret = current_deck + level1_deck + level2_deck + level3_deck + retired_deck[:7] + permanent_deck[:3]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 @login_required
@@ -99,16 +101,15 @@ def update(request):
         logging.info('grasped'), logging.info(hanzi)
         try:
             h = Leitner.objects.get(user=request.user, hanzi=hanzi)
-            # move from Deck Current to Session Deck
-            if h.deck == 'C': h.deck = session_deck_id
             # update level
             h.level += 1
+            # move from Deck Current to Session Deck
+            if h.deck == 'C': h.deck = session_deck_id
             # move from Session Deck to Deck Retired
-            if h.level == 5: 
-                h.deck = 'R'
+            if h.level == 4: h.deck = 'R'
             # move from Deck Retired to Deck Permanent
-            if h.level >= 6:
-                h.level = 6
+            if h.level >= 5:
+                h.level = 5
                 h.deck = 'P'
             h.save()
         except ObjectDoesNotExist:
