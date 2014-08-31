@@ -54,25 +54,40 @@ def get(request):
         today = datetime.datetime.now()
         session_count = SessionCount(user=request.user, count=0, timestamp=today)
         session_count.save()
-    session_deck_id = session_count.count % 10;
-    logging.info('sesson count: {session_count} -> session deck id: {session_deck_id}'.format(session_count=session_count.count, session_deck_id=session_deck_id))
+    deck_ids  = get_deck_ids(session_count)
 
     current_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='C')]
-    level1_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+2)%10), level=1)]
-    level2_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id+5)%10), level=2)]
-    level3_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str((session_deck_id-1)%10), level=3)]
+    level1_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(deck_ids[0]), level=1)]
+    level2_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(deck_ids[1]), level=2)]
+    level3_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck=str(deck_ids[2]), level=3)]
     retired_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='R')]
     permanent_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='P')]
 
     # logging
     log_get_result(current_deck, level1_deck, level2_deck, level3_deck, retired_deck, permanent_deck)
-    all_deck = Leitner.objects.filter(user=request.user);
+    all_deck = Leitner.objects.filter(user=request.user)
     log_all(all_deck)
 
     random.shuffle(retired_deck)
     random.shuffle(permanent_deck)
     ret = current_deck + level1_deck + level2_deck + level3_deck + retired_deck[:7] + permanent_deck[:3]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
+
+
+def get_deck_ids(session_count):
+    '''
+    @return session deck id for level 1, 2, and 3, respectively
+    '''
+    session_deck_id = session_count.count % 10
+    level1_deck_id = (session_deck_id-2)%10
+    level2_deck_id = (session_deck_id+5)%10
+    level3_deck_id = (session_deck_id+1)%10
+    log_str = '\nsession count: {session_count} -> session deck id: {session_deck_id}\n'.format(session_count=session_count.count, session_deck_id=session_deck_id)
+    log_str += 'Level 1 deck: {deck_id}\n'.format(deck_id=level1_deck_id)
+    log_str += 'Level 2 deck: {deck_id}\n'.format(deck_id=level2_deck_id)
+    log_str += 'Level 3 deck: {deck_id}\n'.format(deck_id=level3_deck_id)
+    logging.info(log_str)
+    return (level1_deck_id, level2_deck_id, level3_deck_id)
 
 
 def log_get_result(current_deck, level1_deck, level2_deck, level3_deck, retired_deck, permanent_deck):
