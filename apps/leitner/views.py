@@ -48,6 +48,8 @@ def get(request):
     HTTP GET /leitner/get
     Return [u0x2345, u0x1111, ...]
     '''
+    numRetired = 5
+    numPermanent = 10
     try:
         session_count = SessionCount.objects.get(user=request.user)
     except ObjectDoesNotExist:
@@ -64,13 +66,13 @@ def get(request):
     permanent_deck = [h.hanzi for h in Leitner.objects.filter(user=request.user, deck='P')]
 
     # logging
-    log_get_result(current_deck, level1_deck, level2_deck, level3_deck, retired_deck, permanent_deck)
     all_deck = Leitner.objects.filter(user=request.user)
     log_all(all_deck)
 
     random.shuffle(retired_deck)
     random.shuffle(permanent_deck)
-    ret = current_deck + level1_deck + level2_deck + level3_deck + retired_deck[:7] + permanent_deck[:3]
+    log_get_result(current_deck, level1_deck, level2_deck, level3_deck, retired_deck[:numRetired], permanent_deck[:numPermanent])
+    ret = current_deck + level1_deck + level2_deck + level3_deck + retired_deck[:numRetired] + permanent_deck[:numPermanent]
     return HttpResponse(json.dumps(ret, cls=DjangoJSONEncoder))
 
 
@@ -92,12 +94,12 @@ def get_deck_ids(session_count):
 
 def log_get_result(current_deck, level1_deck, level2_deck, level3_deck, retired_deck, permanent_deck):
     log_str = '\n/leitner/get result\n'
-    log_str += '{n} from Current Deck\n'.format(n=len(current_deck))
-    log_str += '{n} from Level 1 Deck\n'.format(n=len(level1_deck))
-    log_str += '{n} from Level 2 Deck\n'.format(n=len(level2_deck))
-    log_str += '{n} from Level 3 Deck\n'.format(n=len(level3_deck))
-    log_str += '{n} from Retired Deck\n'.format(n=len(retired_deck))
-    log_str += '{n} from Permanent Deck\n'.format(n=len(permanent_deck))
+    log_str += '{n} from Current Deck {deck}\n'.format(n=len(current_deck), deck=current_deck)
+    log_str += '{n} from Level 1 Deck {deck}\n'.format(n=len(level1_deck), deck=level1_deck)
+    log_str += '{n} from Level 2 Deck {deck}\n'.format(n=len(level2_deck), deck=level2_deck)
+    log_str += '{n} from Level 3 Deck {deck}\n'.format(n=len(level3_deck), deck=level3_deck)
+    log_str += '{n} from Retired Deck {deck}\n'.format(n=len(retired_deck), deck=retired_deck)
+    log_str += '{n} from Permanent Deck {deck}\n'.format(n=len(permanent_deck), deck=permanent_deck)
     logging.info(log_str)
 
 def log_all(all_deck):
@@ -153,7 +155,6 @@ def update(request):
 
     grasped_recall = recall_results['grasped'].split(' ')
     for hanzi in grasped_recall:
-        logging.info('grasped'), logging.info(hanzi)
         try:
             h = Leitner.objects.get(user=request.user, hanzi=hanzi)
             # update level
@@ -166,6 +167,7 @@ def update(request):
             if h.level >= 5:
                 h.level = 5
                 h.deck = 'P'
+            log_hanzi(h, 'grasped')
             h.save()
         except ObjectDoesNotExist:
             logging.info('ObjectDoesNotExist')
@@ -176,13 +178,13 @@ def update(request):
 
     unknown_recall = recall_results['unknown'].split(' ')
     for hanzi in unknown_recall:
-        logging.info('unknown'), logging.info(hanzi)
         try:
             h = Leitner.objects.get(user=request.user, hanzi=hanzi)
             # move to Deck Current, set level to 0
             h.deck = 'C'
             h.level = 0
             h.forget_times += 1
+            log_hanzi(h, 'forget')
             h.save()
         except ObjectDoesNotExist:
             pass
@@ -191,6 +193,11 @@ def update(request):
     session_count.count += 1
     session_count.save()
     return
+
+def log_hanzi(h, msg):
+    logging.info(h.hanzi)
+    logging.info('{msg}: deck: [{deck}] level: [{level}]'.format(msg=msg, deck=h.deck, level=h.level))
+
 
 from apps.study.models import StudyHistory
 def importFromStudyHistory():
