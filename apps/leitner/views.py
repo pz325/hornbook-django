@@ -93,14 +93,25 @@ def get_deck_ids(session_count):
 
 
 def log_get_result(current_deck, level1_deck, level2_deck, level3_deck, retired_deck, permanent_deck):
-    log_str = '\n/leitner/get result\n'
-    log_str += '{n} from Current Deck {deck}\n'.format(n=len(current_deck), deck=current_deck)
-    log_str += '{n} from Level 1 Deck {deck}\n'.format(n=len(level1_deck), deck=level1_deck)
-    log_str += '{n} from Level 2 Deck {deck}\n'.format(n=len(level2_deck), deck=level2_deck)
-    log_str += '{n} from Level 3 Deck {deck}\n'.format(n=len(level3_deck), deck=level3_deck)
-    log_str += '{n} from Retired Deck {deck}\n'.format(n=len(retired_deck), deck=retired_deck)
-    log_str += '{n} from Permanent Deck {deck}\n'.format(n=len(permanent_deck), deck=permanent_deck)
-    logging.info(log_str)
+    logging.info('/leitner/get result')
+    logging.info('{n} from Current Deck'.format(n=len(current_deck)))
+    for d in current_deck:
+        logging.info(d)
+    logging.info('{n} from Level 1 Deck'.format(n=len(level1_deck)))
+    for d in level1_deck:
+        logging.info(d)
+    logging.info('{n} from Level 2 Deck'.format(n=len(level2_deck)))
+    for d in level2_deck:
+        logging.info(d)
+    logging.info('{n} from Level 3 Deck'.format(n=len(level3_deck)))
+    for d in level3_deck:
+        logging.info(d)
+    logging.info('{n} from Retired Deck'.format(n=len(retired_deck)))
+    for d in retired_deck:
+        logging.info(d)
+    logging.info('{n} from Permanent Deck'.format(n=len(permanent_deck)))
+    for d in permanent_deck:
+        logging.info(d)
 
 def log_all(all_deck):
     decks = {'C': [], '1': {}, '2': {}, '3': {}, 'R': [], 'P': []}
