@@ -215,13 +215,14 @@ def log_hanzi(h, msg):
 def remove_duplicated(request):
     hanziSet = []
     toDelete = []
-    for h in Leitner.objects.get(user=request.user):
+    for h in Leitner.objects.filter(user=request.user):
         if h.hanzi not in hanziSet:
             hanziSet.append(h.hanzi)
         else:
             toDelete.append(h)
     for h in toDelete:
         h.delete()
+    return HttpResponse(json.dumps([h.hanzi for h in toDelete], cls=DjangoJSONEncoder))
 
 
 from apps.study.models import StudyHistory

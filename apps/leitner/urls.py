@@ -7,5 +7,5 @@ urlpatterns = patterns('apps.leitner.views',
     url(r'^get/$', 'get'),   # return list of Hanzi to recall
     url(r'^update/$', 'update'),   # update Hanzi level, or moving around decks
     url(r'^count/$', 'count'),   # return count Hanzi in a level
-    url(r'^remove_duplicate/$', 'remove_duplicate'), # admin api, remove duplicate
+    url(r'^remove_duplicated/$', 'remove_duplicated'), # admin api, remove duplicate
 )
