@@ -205,9 +205,23 @@ def update(request):
     session_count.save()
     return
 
+
 def log_hanzi(h, msg):
     logging.info(h.hanzi)
     logging.info('{msg}: deck: [{deck}] level: [{level}]'.format(msg=msg, deck=h.deck, level=h.level))
+
+
+@login_required
+def remove_duplicated(request):
+    hanziSet = []
+    toDelete = []
+    for h in Leitner.objects.get(user=request.user):
+        if h.hanzi not in hanziSet:
+            hanziSet.append(h.hanzi)
+        else:
+            toDelete.append(h)
+    for h in toDelete:
+        h.delete()
 
 
 from apps.study.models import StudyHistory
