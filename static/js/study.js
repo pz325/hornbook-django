@@ -21,7 +21,7 @@ $(document).ready(function() {
      * @param index
      * @param total
      */
-    var updateProgress = function(index, total) {
+    var updateProgressBar = function(index, total) {
         if (total === 0)
         {
             $progressBarLearning_.css({"width": "0%"});
@@ -39,7 +39,7 @@ $(document).ready(function() {
     var resetUI = function() {
         showPanel(false);
         $txtRecapList_.text("");
-        updateProgress(0, 0);       
+        updateProgressBar(0, 0);       
         studyList_ = [];
         studyIndex_ = 0;
         graspedList_ = [];
@@ -62,7 +62,7 @@ $(document).ready(function() {
         // display the first character
         Flashcard.displayVocabulary(studyList_[studyIndex_]);
         // set learning progress bar to 0%
-        updateProgress(0, studyList_.length);
+        updateProgressBar(0, studyList_.length);
     };
 
 
@@ -83,7 +83,7 @@ $(document).ready(function() {
             studyIndex_ = 0;
         }
         Flashcard.displayVocabulary(studyList_[studyIndex_]);
-        updateProgress(studyIndex_, studyList_.length);
+        updateProgressBar(studyIndex_, studyList_.length);
     };
 
     /*
@@ -170,7 +170,7 @@ $(document).ready(function() {
         else
         {
             Flashcard.displayVocabulary(studyList_[studyIndex_]);
-            updateProgress(studyIndex_, studyList_.length);
+            updateProgressBar(studyIndex_, studyList_.length);
         }
     };
 
@@ -234,7 +234,7 @@ $(document).ready(function() {
                     resetUI();
             } else {
                 Flashcard.displayVocabulary(studyList_[studyIndex_]);
-                updateProgress(studyIndex_, studyList_.length);
+                updateProgressBar(studyIndex_, studyList_.length);
                 console.log('recap list: ', recapList_);
                 console.log('study list: ', studyList_)
                 $txtRecapList_.text(recapList_);
@@ -244,13 +244,15 @@ $(document).ready(function() {
     });
 
 /// ======== recap ========
-
     var recapClickCallback = function() {
         studyIndex_++;
         if (studyIndex_ === studyList_.length)
+        {
+            studyList_ = Util.shuffle(studyList_);
             studyIndex_ = 0;
+        }    
         Flashcard.displayVocabulary(studyList_[studyIndex_]);
-        updateProgress(studyIndex_, studyList_.length);
+        updateProgressBar(studyIndex_, studyList_.length);
     };
 
     var initRecap = function() {
