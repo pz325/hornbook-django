@@ -2,6 +2,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.contrib import admin
+from rest_framework import serializers, viewsets
 
 STUDY_HISTORY_TYPE = (
     ('N', 'New'),
@@ -26,4 +27,39 @@ class StudyHistory(models.Model):
             history_type=self.history_type,
             studied_times=self.studied_times)
 
+class Reading(models.Model):
+    # user = models.ForeignKey(User)
+    article = models.CharField(max_length=500)
+    book = models.CharField(max_length=500)
+    study_date = models.DateTimeField()
+    revise_date = models.DateTimeField()
+    times = models.PositiveSmallIntegerField(default=0)
+
+class ReadingSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Reading
+        fileds = ('article', 'book', 'study_date', 'revise_date', 'times')
+
+class ReadingViewSet(viewsets.ModelViewSet):
+    queryset = Reading.objects.all()
+    serializer_class = ReadingSerializer
+
+class Recitation(models.Model):
+    # user = models.ForeignKey(User)
+    article = models.CharField(max_length=500)
+    study_date = models.DateTimeField()
+    revise_date = models.DateTimeField()
+    times = models.PositiveSmallIntegerField(default=0)
+
+class RecitationSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Recitation
+        fileds = ('article', 'study_date', 'revise_date', 'times')
+
+class RecitationViewSet(viewsets.ModelViewSet):
+    queryset = Recitation.objects.all()
+    serializer_class = RecitationSerializer
+
 admin.site.register(StudyHistory)
+admin.site.register(Reading)
+admin.site.register(Recitation)

@@ -8,6 +8,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.core.exceptions import ObjectDoesNotExist
 
 from models import StudyHistory
+from models import Reading
+from models import Recitation
+
 import datetime
 import json
 import random

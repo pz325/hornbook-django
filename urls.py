@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^accounts/logout/$', 'django.contrib.auth.views.logout',
         {'next_page': '/'}),
     
+    # Rest framewrok login/logout views
+    # url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    
     url(r'^api/', include('apps.hornbook_api.urls')),
     url(r'^user_vocabularies/', include('apps.user_vocabularies.urls')),
     url(r'^grading_test/', include('apps.grading_test.urls')),
